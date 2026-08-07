@@ -6,6 +6,7 @@ import { QuotationListPage } from './quotations/quotation-list-page'
 import { QuotationDetailsPage } from './quotations/quotation-details-page'
 import { SalesOrdersPage } from './orders/sales-orders-page'
 import { SalesOrderDetailsPage } from './orders/sales-order-details-page'
+import { CreateSalesOrderPage } from './orders/create-sales-order-page'
 import { DeliverySchedulingPage } from './deliveries/delivery-scheduling-page'
 import { DeliveryTrackingPage } from './deliveries/delivery-tracking-page'
 import { InvoiceListPage } from './invoices/invoice-list-page'
@@ -43,6 +44,7 @@ export function SalesRouter({ page }: { page: PageDefinition }) {
       {key === 'quotation details' ? <QuotationDetailsPage id={selectedId} /> : null}
       {key === 'sales orders' ? <SalesOrdersPage onView={setSelectedId} /> : null}
       {key === 'sales order details' ? <SalesOrderDetailsPage id={selectedId} /> : null}
+      {key === 'create sales order' ? <CreateSalesOrderPage /> : null}
       {key === 'delivery scheduling' ? <DeliverySchedulingPage onView={setSelectedId} /> : null}
       {key === 'delivery tracking' ? <DeliveryTrackingPage id={selectedId} /> : null}
       {key === 'invoice list' ? <InvoiceListPage onView={setSelectedId} /> : null}
@@ -59,6 +61,7 @@ export function SalesRouter({ page }: { page: PageDefinition }) {
         'quotation details',
         'sales orders',
         'sales order details',
+        'create sales order',
         'delivery scheduling',
         'delivery tracking',
         'invoice list',
