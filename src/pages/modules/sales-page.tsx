@@ -1,6 +1,6 @@
 import type { PageDefinition } from '@/app/pages'
-import { ModulePageBase } from './module-page-base'
+import { SalesRouter } from '@/features/sales/sales-router'
 
 export default function SalesPage({ page }: { page: PageDefinition }) {
-  return <ModulePageBase page={page} primaryActionLabel="Create Sales Transaction" />
+  return <SalesRouter page={page} />
 }

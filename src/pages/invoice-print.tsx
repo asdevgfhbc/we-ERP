@@ -9,8 +9,30 @@ export function InvoicePrintPage() {
   ]
 
   const subtotal = lines.reduce((sum, line) => sum + line.qty * line.unit, 0)
-  const vat = subtotal * 0.15
-  const total = subtotal + vat
+  const discount = subtotal * 0.04
+  const taxable = subtotal - discount
+  const vat = taxable * 0.15
+  const total = taxable + vat
+
+  const downloadPdf = () => {
+    const content = [
+      'VAT Invoice',
+      'Company: we-ERP Trading Co.',
+      'VAT ID: VAT-9901021',
+      'Invoice No: INV-2026-0441',
+      `Subtotal: ${formatCurrency(subtotal)}`,
+      `Discount: ${formatCurrency(discount)}`,
+      `VAT: ${formatCurrency(vat)}`,
+      `Grand Total: ${formatCurrency(total)}`,
+    ].join('\n')
+    const blob = new Blob([content], { type: 'application/pdf' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = 'vat-invoice.pdf'
+    link.click()
+    URL.revokeObjectURL(url)
+  }
 
   return (
     <div className="space-y-5">
@@ -22,7 +44,10 @@ export function InvoicePrintPage() {
       <Card>
         <CardHeader>
           <CardTitle>VAT Invoice Preview</CardTitle>
-          <SecondaryButton>Print</SecondaryButton>
+          <div className="flex gap-2">
+            <SecondaryButton onClick={() => window.print()}>Print</SecondaryButton>
+            <SecondaryButton onClick={downloadPdf}>Download PDF</SecondaryButton>
+          </div>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto rounded-lg border border-border">
@@ -67,6 +92,10 @@ export function InvoicePrintPage() {
                     <td colSpan={2} className="border border-slate-300 px-3 py-2 text-right">{formatCurrency(subtotal)}</td>
                   </tr>
                   <tr>
+                    <td colSpan={3} className="border border-slate-300 px-3 py-2 text-right font-semibold">Discount</td>
+                    <td colSpan={2} className="border border-slate-300 px-3 py-2 text-right">{formatCurrency(discount)}</td>
+                  </tr>
+                  <tr>
                     <td colSpan={3} className="border border-slate-300 px-3 py-2 text-right font-semibold">VAT (15%)</td>
                     <td colSpan={2} className="border border-slate-300 px-3 py-2 text-right">{formatCurrency(vat)}</td>
                   </tr>
@@ -76,6 +105,15 @@ export function InvoicePrintPage() {
                   </tr>
                 </tfoot>
               </table>
+              <div className="mt-4 grid gap-3 md:grid-cols-2">
+                <div className="rounded-lg border border-dashed border-slate-300 p-3 text-sm text-slate-600">
+                  QR Placeholder: [QR]
+                </div>
+                <div className="rounded-lg border border-dashed border-slate-300 p-3 text-sm text-slate-600">
+                  Signature Area
+                  <div className="mt-6 h-px bg-slate-300" />
+                </div>
+              </div>
             </div>
           </div>
         </CardContent>

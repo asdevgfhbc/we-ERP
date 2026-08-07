@@ -16,6 +16,7 @@ import {
   getWarehouseDetail,
 } from './data'
 import type { MasterEntity } from './types'
+import { prettyLabel } from './master-utils'
 
 type MasterViewMode = 'list' | 'create' | 'edit' | 'detail' | 'history'
 
@@ -72,6 +73,14 @@ function CustomerDetails({ id }: { id: string }) {
           value: `${row.date} - ${row.status}`,
         }))}
       />
+      <MasterDetailGrid
+        title="Recent Activity"
+        details={[
+          { label: 'Last Interaction', value: 'Credit review completed by Finance Manager' },
+          { label: 'Current Follow-up', value: 'Payment follow-up scheduled for 2026-08-12' },
+          { label: 'Risk Indicator', value: 'Medium - monitor outstanding trend' },
+        ]}
+      />
     </div>
   )
 }
@@ -112,6 +121,22 @@ function SupplierDetails({ id }: { id: string }) {
           label: `${row.reference} (${row.type})`,
           value: `${row.date} - ${row.status}`,
         }))}
+      />
+      <MasterDetailGrid
+        title="Contact Persons"
+        details={[
+          { label: 'Procurement Lead', value: 'Lina Wu | +86 139 0112 8876' },
+          { label: 'Finance Contact', value: 'Johan Berg | +46 70 122 8337' },
+          { label: 'Logistics Coordinator', value: 'Aylin Demir | +90 542 881 2204' },
+        ]}
+      />
+      <MasterDetailGrid
+        title="Recent Activity"
+        details={[
+          { label: 'Last PO', value: 'PO-2026-0198 approved and released' },
+          { label: 'Payment Action', value: 'Partial payment posted on 2026-08-05' },
+          { label: 'Import Status', value: 'Two import documents pending customs validation' },
+        ]}
       />
     </div>
   )
@@ -212,6 +237,14 @@ function WarehouseDetails({ id }: { id: string }) {
         }))}
       />
       <MasterDetailGrid title="Stock Summary" details={[{ label: 'Total SKUs', value: 842 }, { label: 'Active Bins', value: 188 }, { label: 'Pending Transfers', value: 9 }]} />
+      <MasterDetailGrid
+        title="Recent Activity"
+        details={[
+          { label: 'Last GRN', value: 'GRN-0004 completed and posted to stock ledger' },
+          { label: 'Transfer Alert', value: 'Transit Buffer Store transfer awaiting dispatch' },
+          { label: 'Cycle Count', value: 'Cycle count variance reduced by 14% this week' },
+        ]}
+      />
     </div>
   )
 }
@@ -222,7 +255,7 @@ function GenericDetails({ entity, id }: { entity: MasterEntity; id: string }) {
     <MasterDetailGrid
       title={`${configs[entity].singularLabel} Details`}
       details={Object.entries(row).map(([key, value]) => ({
-        label: key.replace(/([A-Z])/g, ' $1').replace(/^./, (char) => char.toUpperCase()),
+        label: prettyLabel(key),
         value,
       }))}
     />

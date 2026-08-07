@@ -1,6 +1,6 @@
 import { Download, Eye, FileText, Filter, Printer, Save, Trash2 } from 'lucide-react'
 import { useMemo, useState } from 'react'
-import { cn, formatCurrency } from '@/lib/utils'
+import { cn } from '@/lib/utils'
 import {
   Badge,
   Button,
@@ -21,27 +21,9 @@ import {
 } from '@/components/ui/primitives'
 import { StatusBadge } from '@/components/shared/page-primitives'
 import type { MasterConfig, MasterRow } from './types'
+import { csvValue, displayValueByKey, exportFile, textValue } from './master-utils'
 
 const STATUS_OPTIONS = ['all', 'active', 'pending', 'completed', 'approved', 'inactive']
-
-function textValue(value: unknown) {
-  if (value == null) return ''
-  return String(value)
-}
-
-function csvValue(value: unknown) {
-  return `"${textValue(value).replace(/"/g, '""')}"`
-}
-
-function exportFile(fileName: string, content: string, type: string) {
-  const blob = new Blob([content], { type })
-  const url = URL.createObjectURL(blob)
-  const link = document.createElement('a')
-  link.href = url
-  link.download = fileName
-  link.click()
-  URL.revokeObjectURL(url)
-}
 
 export function MasterDataTable({
   config,
@@ -191,7 +173,44 @@ export function MasterDataTable({
         </CardContent>
       </Card>
 
-      <Card>
+      <div className="grid gap-3 md:hidden">
+        {visibleRows.map((row) => {
+          const id = String(row.id)
+          return (
+            <Card key={`mobile-${id}`}>
+              <CardContent className="space-y-2 pt-5">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={selectedIds.includes(id)}
+                      onChange={() => toggleSelectOne(id)}
+                    />
+                    <p className="font-medium">{textValue(row.name ?? row.code ?? row.id)}</p>
+                  </div>
+                  <StatusBadge value={textValue(row.status)} />
+                </div>
+                {columns.slice(0, 4).map((column) => (
+                  <div key={`mobile-${id}-${column.key}`} className="flex items-center justify-between text-sm">
+                    <span className="text-muted-foreground">{column.label}</span>
+                    <span>{displayValueByKey(column.key, row[column.key])}</span>
+                  </div>
+                ))}
+                <div className="flex justify-end gap-2">
+                  <SecondaryButton className="h-8 px-3" onClick={() => onView(id)}>
+                    <Eye className="h-4 w-4" />
+                  </SecondaryButton>
+                  <SecondaryButton className="h-8 px-3" onClick={() => onEdit(id)}>
+                    Edit
+                  </SecondaryButton>
+                </div>
+              </CardContent>
+            </Card>
+          )
+        })}
+      </div>
+
+      <Card className="hidden md:block">
         <CardHeader>
           <CardTitle>{config.listTitle}</CardTitle>
           <div className="flex flex-wrap items-center gap-2">
@@ -279,10 +298,8 @@ export function MasterDataTable({
                           <Td key={column.key} className={cn(column.align === 'right' && 'text-right')}>
                             {column.key === 'status' ? (
                               <StatusBadge value={textValue(value)} />
-                            ) : column.key.toLowerCase().includes('amount') || column.key.toLowerCase().includes('value') || column.key.toLowerCase().includes('limit') || column.key.toLowerCase().includes('outstanding') ? (
-                              formatCurrency(Number(value || 0))
                             ) : (
-                              textValue(value)
+                              displayValueByKey(column.key, value)
                             )}
                           </Td>
                         )

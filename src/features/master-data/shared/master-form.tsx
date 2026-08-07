@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { CheckCircle2, FileText, Image as ImageIcon } from 'lucide-react'
 import { toast } from 'sonner'
 import { Card, CardContent, CardHeader, CardTitle, Input, SecondaryButton, Select } from '@/components/ui/primitives'
 import type { MasterConfig } from './types'
+import { useUnsavedChangesWarning } from './use-unsaved-changes-warning'
 
 export function MasterForm({
   config,
@@ -19,15 +20,7 @@ export function MasterForm({
   const [fileName, setFileName] = useState('')
   const [imageName, setImageName] = useState('')
 
-  useEffect(() => {
-    const onBeforeUnload = (event: BeforeUnloadEvent) => {
-      if (!dirty) return
-      event.preventDefault()
-      event.returnValue = ''
-    }
-    window.addEventListener('beforeunload', onBeforeUnload)
-    return () => window.removeEventListener('beforeunload', onBeforeUnload)
-  }, [dirty])
+  useUnsavedChangesWarning(dirty)
 
   const title = useMemo(() => `${mode === 'create' ? 'Create' : 'Edit'} ${config.singularLabel}`, [config.singularLabel, mode])
 
