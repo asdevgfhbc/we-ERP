@@ -3,12 +3,10 @@ import type { PageDefinition } from '@/app/pages'
 import { LoadingState } from '@/components/shared/page-primitives'
 
 const MasterDataPage = lazy(() => import('./modules/master-data-page'))
-const ReportsPage = lazy(() => import('./modules/reports-page'))
 const OperationsPage = lazy(() => import('./modules/operations-page'))
 
 const moduleComponentByName: Record<string, ComponentType<{ page: PageDefinition }>> = {
   'Master Data': MasterDataPage,
-  'Reports & Analytics': ReportsPage,
 }
 
 export function GenericPage({ page }: { page: PageDefinition }) {

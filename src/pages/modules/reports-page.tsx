@@ -1,6 +1,6 @@
 import type { PageDefinition } from '@/app/pages'
-import { ModulePageBase } from './module-page-base'
+import { ReportsRouter } from '@/features/reports/router/reports-router'
 
 export default function ReportsPage({ page }: { page: PageDefinition }) {
-  return <ModulePageBase page={page} primaryActionLabel="Generate Report" />
+  return <ReportsRouter page={page} />
 }
