@@ -676,6 +676,7 @@ const pageCatalog: CatalogItem[] = [
   { module: 'Logistics', title: 'Fuel Records', kind: 'table', entity: 'fuel', subtitle: 'Fuel consumption and expense monitoring.' },
   { module: 'Logistics', title: 'Trip History', kind: 'table', entity: 'trip', subtitle: 'Historic trip logs and route outcomes.' },
 
+  { module: 'Finance & Accounting', title: 'Finance Dashboard', kind: 'dashboard', entity: 'general-ledger', subtitle: 'Executive finance cockpit with cash, revenue, and payable visibility.' },
   { module: 'Finance & Accounting', title: 'Accounts Receivable', kind: 'table', entity: 'receivable', subtitle: 'Outstanding customer receivables and aging.' },
   { module: 'Finance & Accounting', title: 'Accounts Payable', kind: 'table', entity: 'payable', subtitle: 'Vendor liabilities and due dates.' },
   { module: 'Finance & Accounting', title: 'Expenses', kind: 'table', entity: 'expense', subtitle: 'Business expense claims and approvals.' },
@@ -685,8 +686,9 @@ const pageCatalog: CatalogItem[] = [
   { module: 'Finance & Accounting', title: 'Cash Book', kind: 'table', entity: 'cash-book', subtitle: 'Cash receipts and payments book.' },
   { module: 'Finance & Accounting', title: 'General Ledger', kind: 'table', entity: 'general-ledger', subtitle: 'Ledger detail for all accounts.' },
   { module: 'Finance & Accounting', title: 'Trial Balance', kind: 'detail', entity: 'trial-balance', subtitle: 'Debit and credit equality verification.' },
-  { module: 'Finance & Accounting', title: 'Profit & Loss', kind: 'detail', entity: 'profit-loss', subtitle: 'Income statement summary by account group.' },
   { module: 'Finance & Accounting', title: 'Balance Sheet', kind: 'detail', entity: 'balance-sheet', subtitle: 'Balance sheet snapshot with assets and liabilities.' },
+  { module: 'Finance & Accounting', title: 'Profit & Loss', kind: 'detail', entity: 'profit-loss', subtitle: 'Income statement summary by account group.' },
+  { module: 'Finance & Accounting', title: 'Tax Summary', kind: 'table', entity: 'vat-settings', subtitle: 'Tax liabilities, VAT summary, and filing status.' },
 
   { module: 'Human Resources', title: 'Employees', kind: 'table', entity: 'employee', subtitle: 'Employee master with department and designation.' },
   { module: 'Human Resources', title: 'Departments', kind: 'table', entity: 'department', subtitle: 'Organizational structure and headcount.' },

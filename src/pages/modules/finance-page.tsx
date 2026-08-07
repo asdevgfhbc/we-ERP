@@ -1,6 +1,6 @@
 import type { PageDefinition } from '@/app/pages'
-import { ModulePageBase } from './module-page-base'
+import { FinanceRouter } from '@/features/finance/router/finance-router'
 
 export default function FinancePage({ page }: { page: PageDefinition }) {
-  return <ModulePageBase page={page} primaryActionLabel="Create Finance Entry" />
+  return <FinanceRouter page={page} />
 }
