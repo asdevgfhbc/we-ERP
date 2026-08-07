@@ -16,6 +16,7 @@ const HrPage = lazy(() => import('@/pages/modules/hr-page'))
 const CustomerServicePage = lazy(() => import('@/pages/modules/customer-service-page'))
 const ReportsPage = lazy(() => import('@/pages/modules/reports-page'))
 const AdministrationPage = lazy(() => import('@/pages/modules/administration-page'))
+const SettingsPage = lazy(() => import('@/pages/modules/settings-page'))
 const DashboardHomePage = lazy(() => import('@/pages/dashboard-home').then((module) => ({ default: module.DashboardHomePage })))
 const InvoicePrintPage = lazy(() => import('@/pages/invoice-print').then((module) => ({ default: module.InvoicePrintPage })))
 const AuthPage = lazy(() => import('@/pages/auth-pages').then((module) => ({ default: module.AuthPage })))
@@ -77,6 +78,10 @@ function CurrentRoutePage() {
 
   if (page.module === 'User Management') {
     return <AdministrationPage page={page} />
+  }
+
+  if (page.module === 'Settings') {
+    return <SettingsPage page={page} />
   }
 
   return <GenericPage page={page} />

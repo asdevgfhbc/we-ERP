@@ -1,6 +1,6 @@
-import { Bell, ChevronDown, LayoutGrid, Menu, Moon, Search, Sun, User } from 'lucide-react'
-import { Link, Outlet, useLocation } from 'react-router-dom'
-import { useEffect, useMemo, useState } from 'react'
+import { Bell, ChevronDown, Command, LayoutGrid, Menu, Moon, Search, Star, Sun, User } from 'lucide-react'
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import type { ErpPage } from '@/app/pages'
 import { notifications, pageTitleByPath } from '@/app/pages'
 import { cn } from '@/lib/utils'
@@ -224,8 +224,199 @@ function ThemeToggle() {
   )
 }
 
+function GlobalSearch({ pages }: { pages: ErpPage[] }) {
+  const navigate = useNavigate()
+  const [open, setOpen] = useState(false)
+  const [query, setQuery] = useState('')
+
+  const results = useMemo(() => {
+    const lower = query.toLowerCase().trim()
+    if (!lower) return []
+    return pages
+      .filter((page) => page.title.toLowerCase().includes(lower) || page.module.toLowerCase().includes(lower))
+      .slice(0, 8)
+  }, [pages, query])
+
+  const goTo = (path: string) => {
+    navigate(path)
+    setOpen(false)
+    setQuery('')
+  }
+
+  return (
+    <div className="relative hidden flex-1 items-center gap-2 rounded-lg border border-border bg-card px-3 md:flex">
+      <Search className="h-4 w-4 text-muted-foreground" />
+      <Input
+        aria-label="Global Search"
+        className="h-9 border-none p-0 shadow-none focus:ring-0"
+        placeholder="Search pages, customers, invoices..."
+        value={query}
+        onFocus={() => setOpen(true)}
+        onBlur={() => setTimeout(() => setOpen(false), 140)}
+        onChange={(event) => {
+          setQuery(event.target.value)
+          setOpen(true)
+        }}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter' && results[0]) {
+            event.preventDefault()
+            goTo(results[0].path)
+          }
+        }}
+      />
+      {open && query.trim() ? (
+        <div className="absolute left-0 right-0 top-12 z-40 rounded-lg border border-border bg-popover p-2 shadow-xl">
+          {results.length === 0 ? <p className="px-2 py-2 text-sm text-muted-foreground">No matching pages.</p> : null}
+          {results.map((page) => (
+            <button
+              key={page.path}
+              type="button"
+              className="block w-full rounded-md px-2 py-2 text-left text-sm hover:bg-muted"
+              onMouseDown={() => goTo(page.path)}
+            >
+              <p className="font-medium">{page.title}</p>
+              <p className="text-xs text-muted-foreground">{page.module}</p>
+            </button>
+          ))}
+        </div>
+      ) : null}
+    </div>
+  )
+}
+
+function useStoredList(key: string) {
+  const [items, setItems] = useState<string[]>(() => {
+    try {
+      const saved = localStorage.getItem(key)
+      if (!saved) return []
+      const parsed = JSON.parse(saved)
+      return Array.isArray(parsed) ? parsed.filter((item) => typeof item === 'string') : []
+    } catch {
+      return []
+    }
+  })
+
+  useEffect(() => {
+    localStorage.setItem(key, JSON.stringify(items))
+  }, [items, key])
+
+  return { items, setItems }
+}
+
+function SimpleMenu({
+  title,
+  trigger,
+  children,
+}: {
+  title: string
+  trigger: ReactNode
+  children: ReactNode
+}) {
+  const [open, setOpen] = useState(false)
+  return (
+    <div className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="inline-flex h-10 items-center gap-2 rounded-lg border border-border px-3 text-sm hover:bg-muted"
+        aria-label={title}
+      >
+        {trigger}
+      </button>
+      {open ? <div className="absolute right-0 z-30 mt-2 w-72 rounded-lg border border-border bg-popover p-2 shadow-xl">{children}</div> : null}
+    </div>
+  )
+}
+
+function CommandPalette({ pages }: { pages: ErpPage[] }) {
+  const navigate = useNavigate()
+  const [open, setOpen] = useState(false)
+  const [query, setQuery] = useState('')
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault()
+        setOpen((v) => !v)
+      }
+      if (event.key === 'Escape') {
+        setOpen(false)
+      }
+    }
+    const onOpenPalette = () => setOpen(true)
+    window.addEventListener('keydown', onKeyDown)
+    window.addEventListener('open-command-palette', onOpenPalette)
+    return () => {
+      window.removeEventListener('keydown', onKeyDown)
+      window.removeEventListener('open-command-palette', onOpenPalette)
+    }
+  }, [])
+
+  const results = useMemo(() => {
+    const lower = query.toLowerCase().trim()
+    if (!lower) return pages.slice(0, 14)
+    return pages.filter((page) => page.title.toLowerCase().includes(lower) || page.module.toLowerCase().includes(lower)).slice(0, 14)
+  }, [pages, query])
+
+  if (!open) return null
+
+  return (
+    <div className="fixed inset-0 z-[60] flex items-start justify-center bg-black/40 px-4 pt-24" role="dialog" aria-modal="true" aria-label="Command Palette">
+      <div className="w-full max-w-2xl rounded-2xl border border-border bg-card p-4 shadow-2xl">
+        <div className="mb-3 flex items-center gap-2 rounded-lg border border-border px-3">
+          <Command className="h-4 w-4 text-muted-foreground" />
+          <Input
+            autoFocus
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Type a page or module name..."
+            className="h-10 border-none p-0 shadow-none focus:ring-0"
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' && results[0]) {
+                navigate(results[0].path)
+                setOpen(false)
+                setQuery('')
+              }
+            }}
+          />
+        </div>
+        <div className="max-h-[50vh] space-y-1 overflow-y-auto">
+          {results.map((page) => (
+            <button
+              key={page.path}
+              type="button"
+              className="block w-full rounded-lg px-3 py-2 text-left hover:bg-muted"
+              onClick={() => {
+                navigate(page.path)
+                setOpen(false)
+                setQuery('')
+              }}
+            >
+              <p className="text-sm font-medium">{page.title}</p>
+              <p className="text-xs text-muted-foreground">{page.module}</p>
+            </button>
+          ))}
+        </div>
+        <p className="mt-3 text-xs text-muted-foreground">Press Ctrl + K to toggle. Press Esc to close.</p>
+      </div>
+    </div>
+  )
+}
+
 export function AppShell({ pages }: { pages: ErpPage[] }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const location = useLocation()
+  const navigate = useNavigate()
+  const { items: favorites, setItems: setFavorites } = useStoredList('we-erp-favorites')
+  const { items: recents, setItems: setRecents } = useStoredList('we-erp-recents')
+
+  useEffect(() => {
+    const path = location.pathname
+    setRecents((prev) => [path, ...prev.filter((item) => item !== path)].slice(0, 8))
+  }, [location.pathname, setRecents])
+
+  const currentPage = useMemo(() => pages.find((page) => page.path === location.pathname), [location.pathname, pages])
+  const favoriteSet = useMemo(() => new Set(favorites), [favorites])
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -238,21 +429,77 @@ export function AppShell({ pages }: { pages: ErpPage[] }) {
                 type="button"
                 onClick={() => setSidebarOpen(true)}
                 className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-border md:hidden"
+                aria-label="Open menu"
               >
                 <Menu className="h-4 w-4" />
               </button>
-              <div className="hidden flex-1 items-center gap-2 rounded-lg border border-border bg-card px-3 md:flex">
-                <Search className="h-4 w-4 text-muted-foreground" />
-                <Input className="h-9 border-none p-0 shadow-none focus:ring-0" placeholder="Search customers, invoices, shipments..." />
-              </div>
-              <SecondaryButton className="gap-2">
+              <GlobalSearch pages={pages} />
+              <SecondaryButton className="gap-2" onClick={() => window.dispatchEvent(new Event('open-command-palette'))}>
                 <LayoutGrid className="h-4 w-4" />
                 Quick Actions
               </SecondaryButton>
+              <SimpleMenu title="Favorites" trigger={<><Star className="h-4 w-4" />Favorites</>}>
+                <p className="mb-1 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Favorites</p>
+                {favorites.length === 0 ? <p className="px-2 py-2 text-sm text-muted-foreground">No favorites yet.</p> : null}
+                {favorites.map((path) => {
+                  const page = pages.find((item) => item.path === path)
+                  if (!page) return null
+                  return (
+                    <button
+                      key={path}
+                      type="button"
+                      className="block w-full rounded-md px-2 py-2 text-left text-sm hover:bg-muted"
+                      onClick={() => navigate(path)}
+                    >
+                      {page.title}
+                    </button>
+                  )
+                })}
+              </SimpleMenu>
+              <SimpleMenu title="Recent Pages" trigger={<><LayoutGrid className="h-4 w-4" />Recent</>}>
+                <p className="mb-1 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Recent Pages</p>
+                {recents.length === 0 ? <p className="px-2 py-2 text-sm text-muted-foreground">No recent pages yet.</p> : null}
+                {recents.map((path) => {
+                  const page = pages.find((item) => item.path === path)
+                  if (!page) return null
+                  return (
+                    <button
+                      key={path}
+                      type="button"
+                      className="block w-full rounded-md px-2 py-2 text-left text-sm hover:bg-muted"
+                      onClick={() => navigate(path)}
+                    >
+                      {page.title}
+                    </button>
+                  )
+                })}
+              </SimpleMenu>
               <ThemeToggle />
               <NotificationMenu />
               <UserMenu />
             </div>
+            {currentPage ? (
+              <div className="mt-2 flex items-center justify-end">
+                <button
+                  type="button"
+                  className={cn(
+                    'inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs',
+                    favoriteSet.has(currentPage.path) ? 'bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-300' : 'text-muted-foreground hover:bg-muted',
+                  )}
+                  onClick={() => {
+                    setFavorites((prev) =>
+                      prev.includes(currentPage.path)
+                        ? prev.filter((path) => path !== currentPage.path)
+                        : [currentPage.path, ...prev].slice(0, 20),
+                    )
+                  }}
+                  aria-label="Toggle favorite"
+                >
+                  <Star className="h-3 w-3" />
+                  {favoriteSet.has(currentPage.path) ? 'Favorited' : 'Add Favorite'}
+                </button>
+              </div>
+            ) : null}
             <div className="mt-3">
               <Breadcrumbs />
             </div>
@@ -262,6 +509,7 @@ export function AppShell({ pages }: { pages: ErpPage[] }) {
           </main>
         </div>
       </div>
+      <CommandPalette pages={pages} />
       {sidebarOpen && <div className="fixed inset-0 z-30 bg-black/30 md:hidden" onClick={() => setSidebarOpen(false)} />}
     </div>
   )
