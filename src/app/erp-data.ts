@@ -701,11 +701,13 @@ const pageCatalog: CatalogItem[] = [
   { module: 'Human Resources', title: 'Holiday Calendar', kind: 'table', entity: 'holiday', subtitle: 'Holiday calendar and public holiday planning.' },
   { module: 'Human Resources', title: 'Recruitment', kind: 'table', entity: 'recruitment', subtitle: 'Open requisitions and hiring progress.' },
 
+  { module: 'Customer Service', title: 'Customer Service Dashboard', kind: 'dashboard', entity: 'complaint', subtitle: 'Support cockpit with SLA, ticket, and return health.' },
   { module: 'Customer Service', title: 'Complaints', kind: 'table', entity: 'complaint', subtitle: 'Complaint tickets and escalation status.' },
+  { module: 'Customer Service', title: 'Complaint Details', kind: 'detail', entity: 'complaint', subtitle: 'Complaint detail with root cause and resolution timeline.' },
   { module: 'Customer Service', title: 'Returns', kind: 'table', entity: 'return', subtitle: 'Customer return handling and replacement workflow.' },
   { module: 'Customer Service', title: 'Warranty Claims', kind: 'table', entity: 'warranty', subtitle: 'Warranty claim processing and approvals.' },
   { module: 'Customer Service', title: 'Service Requests', kind: 'table', entity: 'service-request', subtitle: 'Support requests and resolution timeline.' },
-  { module: 'Customer Service', title: 'Customer History', kind: 'detail', entity: 'customer-history', subtitle: 'Customer activity, orders, and payment history.' },
+  { module: 'Customer Service', title: 'Customer Timeline', kind: 'detail', entity: 'customer-history', subtitle: 'Customer activity, orders, complaints, and service timeline.' },
 
   { module: 'Reports & Analytics', title: 'Sales Reports', kind: 'report', entity: 'sales-report', subtitle: 'Sales trends, category performance, and customer ranking.' },
   { module: 'Reports & Analytics', title: 'Purchase Reports', kind: 'report', entity: 'purchase-report', subtitle: 'Purchase trends and supplier analysis.' },
