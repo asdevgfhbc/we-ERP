@@ -726,9 +726,14 @@ const pageCatalog: CatalogItem[] = [
   { module: 'Reports & Analytics', title: 'Top Customers', kind: 'report', entity: 'sales-report', subtitle: 'Top customers by revenue, frequency, and payment discipline.' },
 
   { module: 'User Management', title: 'Users', kind: 'table', entity: 'user', subtitle: 'Application users and access status.' },
+  { module: 'User Management', title: 'User Details', kind: 'detail', entity: 'user', subtitle: 'User profile, status, and assigned permissions.' },
   { module: 'User Management', title: 'Roles', kind: 'table', entity: 'role', subtitle: 'Role master and permission coverage.' },
-  { module: 'User Management', title: 'Permissions', kind: 'form', entity: 'role', subtitle: 'Permission matrix configuration.' },
+  { module: 'User Management', title: 'Permissions', kind: 'table', entity: 'role', subtitle: 'Permission matrix configuration.' },
+  { module: 'User Management', title: 'Role Assignments', kind: 'table', entity: 'role', subtitle: 'User-to-role assignments with effective dates.' },
   { module: 'User Management', title: 'Activity Logs', kind: 'table', entity: 'activity-log', subtitle: 'Audit trail of system and user actions.' },
+  { module: 'User Management', title: 'Audit Trail', kind: 'table', entity: 'activity-log', subtitle: 'Immutable trace of critical admin actions.' },
+  { module: 'User Management', title: 'System Logs', kind: 'table', entity: 'activity-log', subtitle: 'Service-level operational logs and incidents.' },
+  { module: 'User Management', title: 'Login History', kind: 'table', entity: 'activity-log', subtitle: 'Session history and login attempts per user.' },
 
   { module: 'Settings', title: 'Company Information', kind: 'form', entity: 'company', subtitle: 'Organization profile, logo, VAT, and contact information.' },
   { module: 'Settings', title: 'Company Logo', kind: 'form', entity: 'company', subtitle: 'Upload or replace the brand logo asset.' },
