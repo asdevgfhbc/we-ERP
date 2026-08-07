@@ -1,23 +1,61 @@
 import { Bell, ChevronDown, LayoutGrid, Menu, Moon, Search, Sun, User } from 'lucide-react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import type { ErpPage } from '@/app/pages'
 import { notifications, pageTitleByPath } from '@/app/pages'
 import { cn } from '@/lib/utils'
 import { Input, SecondaryButton } from '@/components/ui/primitives'
 import { useTheme } from '@/app/theme'
 
+const NAV_SECTIONS = [
+  'Dashboard',
+  'Master Data',
+  'Sales',
+  'Purchasing',
+  'Warehouse',
+  'Logistics',
+  'Finance',
+  'HR',
+  'Customer Service',
+  'Reports',
+  'Administration',
+  'Settings',
+] as const
+
+function sectionFromModule(module: string) {
+  if (module === 'Sales & Distribution') return 'Sales'
+  if (module === 'Purchasing / Import') return 'Purchasing'
+  if (module === 'Finance & Accounting') return 'Finance'
+  if (module === 'Human Resources') return 'HR'
+  if (module === 'Reports & Analytics') return 'Reports'
+  if (module === 'User Management') return 'Administration'
+  return module
+}
+
 function Sidebar({ pages, open, onClose }: { pages: ErpPage[]; open: boolean; onClose: () => void }) {
   const location = useLocation()
+  const [expandedSection, setExpandedSection] = useState<string>('Dashboard')
+
   const grouped = useMemo(() => {
+    const initial = Object.fromEntries(NAV_SECTIONS.map((section) => [section, [] as ErpPage[]]))
     return pages.reduce<Record<string, ErpPage[]>>((acc, page) => {
-      if (!acc[page.module]) {
-        acc[page.module] = []
+      const section = sectionFromModule(page.module)
+      if (!acc[section]) {
+        acc[section] = []
       }
-      acc[page.module].push(page)
+      acc[section].push(page)
       return acc
-    }, {})
+    }, initial)
   }, [pages])
+
+  const activeSection = useMemo(() => {
+    const currentPage = pages.find((page) => page.path === location.pathname)
+    return currentPage ? sectionFromModule(currentPage.module) : 'Dashboard'
+  }, [location.pathname, pages])
+
+  useEffect(() => {
+    setExpandedSection(activeSection)
+  }, [activeSection])
 
   return (
     <aside
@@ -36,31 +74,53 @@ function Sidebar({ pages, open, onClose }: { pages: ErpPage[]; open: boolean; on
         </button>
       </div>
       <div className="max-h-[calc(100svh-130px)] space-y-4 overflow-y-auto pr-1">
-        {Object.entries(grouped).map(([module, modulePages]) => (
-          <div key={module}>
-            <p className="mb-2 px-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">{module}</p>
-            <div className="space-y-1">
-              {modulePages.map((page) => {
-                const active = location.pathname === page.path
-                return (
-                  <Link
-                    key={page.path}
-                    to={page.path}
-                    className={cn(
-                      'block rounded-lg px-3 py-2 text-sm transition',
-                      active
-                        ? 'bg-sidebar-primary text-sidebar-primary-foreground shadow-sm'
-                        : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
-                    )}
-                    onClick={onClose}
-                  >
-                    {page.title}
-                  </Link>
-                )
-              })}
+        {NAV_SECTIONS.map((section) => {
+          const sectionPages = grouped[section] ?? []
+          const isExpanded = expandedSection === section
+
+          if (sectionPages.length === 0) return null
+
+          return (
+            <div key={section}>
+              <button
+                type="button"
+                className={cn(
+                  'mb-1 flex w-full items-center justify-between rounded-lg px-2 py-2 text-left text-xs font-semibold uppercase tracking-wide transition',
+                  activeSection === section
+                    ? 'bg-sidebar-accent text-sidebar-accent-foreground'
+                    : 'text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
+                )}
+                onClick={() => setExpandedSection((current) => (current === section ? '' : section))}
+              >
+                {section}
+                <ChevronDown className={cn('h-4 w-4 transition-transform', isExpanded ? 'rotate-0' : '-rotate-90')} />
+              </button>
+
+              {isExpanded ? (
+                <div className="space-y-1 pl-2">
+                  {sectionPages.map((page) => {
+                    const active = location.pathname === page.path
+                    return (
+                      <Link
+                        key={page.path}
+                        to={page.path}
+                        className={cn(
+                          'block rounded-lg px-3 py-2 text-sm transition',
+                          active
+                            ? 'bg-sidebar-primary text-sidebar-primary-foreground shadow-sm'
+                            : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
+                        )}
+                        onClick={onClose}
+                      >
+                        {page.title}
+                      </Link>
+                    )
+                  })}
+                </div>
+              ) : null}
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </aside>
   )

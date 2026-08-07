@@ -1,6 +1,6 @@
 import type { PageDefinition } from '@/app/pages'
-import { ModulePageBase } from './module-page-base'
+import { MasterDataRouter } from '@/features/master-data/master-data-router'
 
 export default function MasterDataPage({ page }: { page: PageDefinition }) {
-  return <ModulePageBase page={page} primaryActionLabel="Create Master Record" />
+  return <MasterDataRouter page={page} />
 }
