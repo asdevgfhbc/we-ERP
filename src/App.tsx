@@ -1,7 +1,7 @@
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { Toaster, toast } from 'sonner'
 import { AppShell } from '@/components/shared/app-shell'
-import { authPages, erpPages } from '@/app/pages'
+import { authPages, erpPages, getPageDefinition } from '@/app/pages'
 import { GenericPage } from '@/pages/generic-page'
 import { DashboardHomePage } from '@/pages/dashboard-home'
 import { InvoicePrintPage } from '@/pages/invoice-print'
@@ -9,8 +9,15 @@ import { AuthPage } from '@/pages/auth-pages'
 import { UserProfilePage } from '@/pages/user-profile'
 import { ThemeProvider } from '@/app/theme'
 
-function RoutedPage({ path }: { path: string }) {
-  const page = erpPages.find((entry) => entry.path === path)
+function CurrentRoutePage() {
+  const location = useLocation()
+  const path = location.pathname.replace(/\/$/, '') || '/'
+
+  if (path === '/dashboard' || path === '/dashboard/dashboard-home') {
+    return <Navigate to="/dashboard/home" replace />
+  }
+
+  const page = getPageDefinition(path)
 
   if (!page) {
     return <Navigate to="/dashboard/home" replace />
@@ -32,15 +39,15 @@ export default function App() {
     <ThemeProvider>
       <Routes>
         <Route path="/" element={<Navigate to="/dashboard/home" replace />} />
+        <Route path="/dashboard" element={<Navigate to="/dashboard/home" replace />} />
+        <Route path="/dashboard/dashboard-home" element={<Navigate to="/dashboard/home" replace />} />
         {authPages.map((page) => (
           <Route key={page.path} path={page.path} element={<AuthPage title={page.title} />} />
         ))}
 
         <Route path="/" element={<AppShell pages={erpPages} />}>
           <Route path="profile" element={<UserProfilePage />} />
-          {erpPages.map((page) => (
-            <Route key={page.path} path={page.path.slice(1)} element={<RoutedPage path={page.path} />} />
-          ))}
+          <Route path="*" element={<CurrentRoutePage />} />
         </Route>
       </Routes>
       <Toaster position="top-right" richColors closeButton />

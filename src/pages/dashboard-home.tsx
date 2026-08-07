@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import { AlertTriangle, Truck } from 'lucide-react'
+import { AlertTriangle, ArrowRight, Truck } from 'lucide-react'
 import { Bar, BarChart, CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
-import { dashboardStats, lowStockAlerts, monthlyPerformance } from '@/app/mock-data'
+import { dashboardCategory, dashboardPerformance, dashboardStats, lowStockAlerts, recentActivities, topCustomers, topProducts } from '@/app/pages'
 import { formatCurrency } from '@/lib/utils'
 import { Card, CardContent, CardHeader, CardTitle, Skeleton } from '@/components/ui/primitives'
 import { StatusBadge } from '@/components/shared/page-primitives'
@@ -27,7 +27,7 @@ export function DashboardHomePage() {
     <div className="space-y-5">
       <div>
         <h1 className="font-display text-2xl font-bold tracking-tight">Dashboard Home</h1>
-        <p className="text-sm text-muted-foreground">Sales, purchase, inventory, and finance overview in one unified cockpit.</p>
+        <p className="text-sm text-muted-foreground">Executive overview for sales, purchasing, warehouse, finance, and operations.</p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -35,11 +35,10 @@ export function DashboardHomePage() {
           <Card key={stat.title}>
             <CardHeader>
               <CardTitle>{stat.title}</CardTitle>
-              <StatusBadge value="Approved" />
             </CardHeader>
             <CardContent>
               <p className="font-display text-3xl font-semibold">{formatCurrency(stat.value)}</p>
-              <p className="text-sm text-emerald-600 dark:text-emerald-400">{stat.trend} vs last month</p>
+              <p className="text-sm text-emerald-600 dark:text-emerald-400">{stat.delta} vs yesterday</p>
             </CardContent>
           </Card>
         ))}
@@ -48,11 +47,11 @@ export function DashboardHomePage() {
       <div className="grid gap-4 xl:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Financial Summary</CardTitle>
+            <CardTitle>Monthly Sales Chart</CardTitle>
           </CardHeader>
           <CardContent className="h-80">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={monthlyPerformance}>
+              <LineChart data={dashboardPerformance}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                 <XAxis dataKey="month" />
                 <YAxis />
@@ -66,16 +65,16 @@ export function DashboardHomePage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Inventory & Margin Analytics</CardTitle>
+            <CardTitle>Monthly Purchase Chart</CardTitle>
           </CardHeader>
           <CardContent className="h-80">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={monthlyPerformance}>
+              <BarChart data={dashboardPerformance}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                 <XAxis dataKey="month" />
                 <YAxis />
                 <Tooltip />
-                <Bar dataKey="margin" fill="hsl(var(--chart-3))" radius={[8, 8, 0, 0]} />
+                <Bar dataKey="purchase" fill="hsl(var(--chart-3))" radius={[8, 8, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
@@ -93,8 +92,14 @@ export function DashboardHomePage() {
           <CardContent className="space-y-3">
             {lowStockAlerts.map((item) => (
               <div key={item.sku} className="rounded-xl border border-border p-3">
-                <p className="font-medium">{item.product}</p>
-                <p className="text-sm text-muted-foreground">{item.sku} - Qty {item.qty} (Min {item.min})</p>
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="font-medium">{item.product}</p>
+                    <p className="text-sm text-muted-foreground">{item.warehouse} - {item.sku}</p>
+                  </div>
+                  <StatusBadge value="Pending" />
+                </div>
+                <p className="mt-2 text-sm text-muted-foreground">Qty {item.qty} / Min {item.min}</p>
               </div>
             ))}
           </CardContent>
@@ -108,13 +113,81 @@ export function DashboardHomePage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            {['DEL-2201', 'DEL-2207', 'DEL-2234', 'DEL-2290'].map((delivery) => (
+            {['DLV-2026-0004', 'DLV-2026-0012', 'DLV-2026-0021', 'DLV-2026-0033'].map((delivery) => (
               <div key={delivery} className="flex items-center justify-between rounded-xl border border-border p-3">
                 <div>
                   <p className="font-medium">{delivery}</p>
                   <p className="text-sm text-muted-foreground">Expected within 24 hours</p>
                 </div>
                 <StatusBadge value="In Transit" />
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid gap-4 xl:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Sales by Category</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {dashboardCategory.map((item) => (
+              <div key={item.category} className="rounded-xl border border-border p-3">
+                <div className="flex items-center justify-between">
+                  <p className="font-medium">{item.category}</p>
+                  <p className="text-sm text-muted-foreground">{item.sales}%</p>
+                </div>
+                <div className="mt-2 h-2 rounded-full bg-muted">
+                  <div className="h-2 rounded-full bg-primary" style={{ width: `${item.sales}%` }} />
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Top Customers</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {topCustomers.map((item) => (
+              <div key={item.name} className="flex items-center justify-between rounded-xl border border-border p-3">
+                <div>
+                  <p className="font-medium">{item.name}</p>
+                  <p className="text-sm text-muted-foreground">Enterprise account</p>
+                </div>
+                <p className="text-sm text-muted-foreground">{formatCurrency(item.value)}</p>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid gap-4 xl:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Top Selling Products</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {topProducts.map((item) => (
+              <div key={item.name} className="flex items-center justify-between rounded-xl border border-border p-3">
+                <p className="font-medium">{item.name}</p>
+                <p className="text-sm text-muted-foreground">{item.value} units</p>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Recent Activities</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {recentActivities.map((activity) => (
+              <div key={activity} className="flex items-start gap-3 rounded-xl border border-border p-3">
+                <ArrowRight className="mt-0.5 h-4 w-4 text-primary" />
+                <p className="text-sm text-muted-foreground">{activity}</p>
               </div>
             ))}
           </CardContent>
