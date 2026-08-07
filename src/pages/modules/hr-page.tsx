@@ -1,6 +1,6 @@
 import type { PageDefinition } from '@/app/pages'
-import { ModulePageBase } from './module-page-base'
+import { HrRouter } from '@/features/hr/router/hr-router'
 
 export default function HrPage({ page }: { page: PageDefinition }) {
-  return <ModulePageBase page={page} primaryActionLabel="Create HR Record" />
+  return <HrRouter page={page} />
 }

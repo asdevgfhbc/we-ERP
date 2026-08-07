@@ -12,6 +12,7 @@ const PurchasingPage = lazy(() => import('@/pages/modules/purchasing-page'))
 const WarehousePage = lazy(() => import('@/pages/modules/warehouse-page'))
 const LogisticsPage = lazy(() => import('@/pages/modules/logistics-page'))
 const FinancePage = lazy(() => import('@/pages/modules/finance-page'))
+const HrPage = lazy(() => import('@/pages/modules/hr-page'))
 const DashboardHomePage = lazy(() => import('@/pages/dashboard-home').then((module) => ({ default: module.DashboardHomePage })))
 const InvoicePrintPage = lazy(() => import('@/pages/invoice-print').then((module) => ({ default: module.InvoicePrintPage })))
 const AuthPage = lazy(() => import('@/pages/auth-pages').then((module) => ({ default: module.AuthPage })))
@@ -57,6 +58,10 @@ function CurrentRoutePage() {
 
   if (page.module === 'Finance & Accounting') {
     return <FinancePage page={page} />
+  }
+
+  if (page.module === 'Human Resources') {
+    return <HrPage page={page} />
   }
 
   return <GenericPage page={page} />

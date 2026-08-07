@@ -690,13 +690,15 @@ const pageCatalog: CatalogItem[] = [
   { module: 'Finance & Accounting', title: 'Profit & Loss', kind: 'detail', entity: 'profit-loss', subtitle: 'Income statement summary by account group.' },
   { module: 'Finance & Accounting', title: 'Tax Summary', kind: 'table', entity: 'vat-settings', subtitle: 'Tax liabilities, VAT summary, and filing status.' },
 
+  { module: 'Human Resources', title: 'HR Dashboard', kind: 'dashboard', entity: 'employee', subtitle: 'Workforce cockpit with attendance, leave, and payroll status.' },
   { module: 'Human Resources', title: 'Employees', kind: 'table', entity: 'employee', subtitle: 'Employee master with department and designation.' },
+  { module: 'Human Resources', title: 'Employee Details', kind: 'detail', entity: 'employee', subtitle: 'Detailed employee profile and HR activity timeline.' },
   { module: 'Human Resources', title: 'Departments', kind: 'table', entity: 'department', subtitle: 'Organizational structure and headcount.' },
   { module: 'Human Resources', title: 'Designations', kind: 'table', entity: 'designation', subtitle: 'Role levels and employee allocation.' },
   { module: 'Human Resources', title: 'Attendance', kind: 'table', entity: 'attendance', subtitle: 'Attendance tracking with check-in/out status.' },
   { module: 'Human Resources', title: 'Leave', kind: 'table', entity: 'leave', subtitle: 'Leave balances, approvals, and entitlements.' },
   { module: 'Human Resources', title: 'Payroll', kind: 'table', entity: 'payroll', subtitle: 'Payroll processing and salary summaries.' },
-  { module: 'Human Resources', title: 'Holidays', kind: 'table', entity: 'holiday', subtitle: 'Holiday calendar and public holiday planning.' },
+  { module: 'Human Resources', title: 'Holiday Calendar', kind: 'table', entity: 'holiday', subtitle: 'Holiday calendar and public holiday planning.' },
   { module: 'Human Resources', title: 'Recruitment', kind: 'table', entity: 'recruitment', subtitle: 'Open requisitions and hiring progress.' },
 
   { module: 'Customer Service', title: 'Complaints', kind: 'table', entity: 'complaint', subtitle: 'Complaint tickets and escalation status.' },
