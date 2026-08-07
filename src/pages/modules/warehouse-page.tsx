@@ -1,6 +1,6 @@
 import type { PageDefinition } from '@/app/pages'
-import { ModulePageBase } from './module-page-base'
+import { WarehouseRouter } from '@/features/warehouse/router/warehouse-router'
 
 export default function WarehousePage({ page }: { page: PageDefinition }) {
-  return <ModulePageBase page={page} primaryActionLabel="Create Warehouse Action" />
+  return <WarehouseRouter page={page} />
 }

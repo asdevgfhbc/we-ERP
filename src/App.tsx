@@ -9,6 +9,7 @@ import { LoadingState } from '@/components/shared/page-primitives'
 const GenericPage = lazy(() => import('@/pages/generic-page').then((module) => ({ default: module.GenericPage })))
 const SalesPage = lazy(() => import('@/pages/modules/sales-page'))
 const PurchasingPage = lazy(() => import('@/pages/modules/purchasing-page'))
+const WarehousePage = lazy(() => import('@/pages/modules/warehouse-page'))
 const DashboardHomePage = lazy(() => import('@/pages/dashboard-home').then((module) => ({ default: module.DashboardHomePage })))
 const InvoicePrintPage = lazy(() => import('@/pages/invoice-print').then((module) => ({ default: module.InvoicePrintPage })))
 const AuthPage = lazy(() => import('@/pages/auth-pages').then((module) => ({ default: module.AuthPage })))
@@ -42,6 +43,10 @@ function CurrentRoutePage() {
 
   if (page.module === 'Purchasing / Import') {
     return <PurchasingPage page={page} />
+  }
+
+  if (page.module === 'Warehouse') {
+    return <WarehousePage page={page} />
   }
 
   return <GenericPage page={page} />
