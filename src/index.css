@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 198 60% 99%;
+  --foreground: 214 34% 16%;
+  --card: 0 0% 100%;
+  --card-foreground: 214 34% 16%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 214 34% 16%;
+  --primary: 186 86% 32%;
+  --primary-foreground: 0 0% 100%;
+  --muted: 200 36% 96%;
+  --muted-foreground: 214 14% 44%;
+  --border: 210 23% 88%;
+  --input: 210 23% 88%;
+  --ring: 186 86% 32%;
+  --destructive: 0 74% 51%;
+  --sidebar-background: 198 42% 97%;
+  --sidebar-foreground: 215 30% 21%;
+  --sidebar-primary: 186 86% 32%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 190 54% 93%;
+  --sidebar-accent-foreground: 214 34% 16%;
+  --chart-1: 186 86% 32%;
+  --chart-2: 206 92% 48%;
+  --chart-3: 30 94% 51%;
+}
+
+.dark {
+  --background: 219 24% 10%;
+  --foreground: 210 20% 96%;
+  --card: 221 19% 14%;
+  --card-foreground: 210 20% 96%;
+  --popover: 221 19% 14%;
+  --popover-foreground: 210 20% 96%;
+  --primary: 183 88% 42%;
+  --primary-foreground: 219 24% 10%;
+  --muted: 220 15% 19%;
+  --muted-foreground: 214 14% 70%;
+  --border: 219 14% 26%;
+  --input: 219 14% 26%;
+  --ring: 183 88% 42%;
+  --destructive: 0 62% 56%;
+  --sidebar-background: 220 23% 12%;
+  --sidebar-foreground: 210 20% 96%;
+  --sidebar-primary: 183 88% 42%;
+  --sidebar-primary-foreground: 219 24% 10%;
+  --sidebar-accent: 220 15% 19%;
+  --sidebar-accent-foreground: 210 20% 96%;
+  --chart-1: 183 88% 42%;
+  --chart-2: 196 94% 60%;
+  --chart-3: 35 92% 55%;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: Manrope, 'Segoe UI', sans-serif;
+    background-image:
+      radial-gradient(circle at 0% 0%, hsl(var(--primary) / 0.08), transparent 24%),
+      radial-gradient(circle at 100% 100%, hsl(var(--chart-2) / 0.08), transparent 30%);
+  }
+
+  #root {
+    min-height: 100svh;
+  }
+}
