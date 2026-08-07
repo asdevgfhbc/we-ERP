@@ -2,9 +2,8 @@ import { Bell, ChevronDown, LayoutGrid, Menu, Moon, Search, Sun, User } from 'lu
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import { useMemo, useState } from 'react'
 import type { ErpPage } from '@/app/pages'
-import { pageTitleByPath } from '@/app/pages'
+import { notifications, pageTitleByPath } from '@/app/pages'
 import { cn } from '@/lib/utils'
-import { notifications } from '@/app/mock-data'
 import { Input, SecondaryButton } from '@/components/ui/primitives'
 import { useTheme } from '@/app/theme'
 

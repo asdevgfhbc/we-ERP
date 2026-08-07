@@ -1,13 +1,16 @@
+import { Suspense, lazy } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { Toaster, toast } from 'sonner'
 import { AppShell } from '@/components/shared/app-shell'
 import { authPages, erpPages, getPageDefinition } from '@/app/pages'
-import { GenericPage } from '@/pages/generic-page'
-import { DashboardHomePage } from '@/pages/dashboard-home'
-import { InvoicePrintPage } from '@/pages/invoice-print'
-import { AuthPage } from '@/pages/auth-pages'
-import { UserProfilePage } from '@/pages/user-profile'
 import { ThemeProvider } from '@/app/theme'
+import { LoadingState } from '@/components/shared/page-primitives'
+
+const GenericPage = lazy(() => import('@/pages/generic-page').then((module) => ({ default: module.GenericPage })))
+const DashboardHomePage = lazy(() => import('@/pages/dashboard-home').then((module) => ({ default: module.DashboardHomePage })))
+const InvoicePrintPage = lazy(() => import('@/pages/invoice-print').then((module) => ({ default: module.InvoicePrintPage })))
+const AuthPage = lazy(() => import('@/pages/auth-pages').then((module) => ({ default: module.AuthPage })))
+const UserProfilePage = lazy(() => import('@/pages/user-profile').then((module) => ({ default: module.UserProfilePage })))
 
 function CurrentRoutePage() {
   const location = useLocation()
@@ -27,7 +30,7 @@ function CurrentRoutePage() {
     return <DashboardHomePage />
   }
 
-  if (page.title === 'Print VAT Invoice') {
+  if (page.kind === 'print' && page.entity === 'invoice') {
     return <InvoicePrintPage />
   }
 
@@ -37,19 +40,21 @@ function CurrentRoutePage() {
 export default function App() {
   return (
     <ThemeProvider>
-      <Routes>
-        <Route path="/" element={<Navigate to="/dashboard/home" replace />} />
-        <Route path="/dashboard" element={<Navigate to="/dashboard/home" replace />} />
-        <Route path="/dashboard/dashboard-home" element={<Navigate to="/dashboard/home" replace />} />
-        {authPages.map((page) => (
-          <Route key={page.path} path={page.path} element={<AuthPage title={page.title} />} />
-        ))}
+      <Suspense fallback={<div className="p-6"><LoadingState /></div>}>
+        <Routes>
+          <Route path="/" element={<Navigate to="/dashboard/home" replace />} />
+          <Route path="/dashboard" element={<Navigate to="/dashboard/home" replace />} />
+          <Route path="/dashboard/dashboard-home" element={<Navigate to="/dashboard/home" replace />} />
+          {authPages.map((page) => (
+            <Route key={page.path} path={page.path} element={<AuthPage title={page.title} />} />
+          ))}
 
-        <Route path="/" element={<AppShell pages={erpPages} />}>
-          <Route path="profile" element={<UserProfilePage />} />
-          <Route path="*" element={<CurrentRoutePage />} />
-        </Route>
-      </Routes>
+          <Route path="/" element={<AppShell pages={erpPages} />}>
+            <Route path="profile" element={<UserProfilePage />} />
+            <Route path="*" element={<CurrentRoutePage />} />
+          </Route>
+        </Routes>
+      </Suspense>
       <Toaster position="top-right" richColors closeButton />
       <button
         type="button"
