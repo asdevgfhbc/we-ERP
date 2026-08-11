@@ -1,4 +1,23 @@
-import { Bell, ChevronDown, Command, LayoutGrid, Menu, Moon, Search, Star, Sun, User } from 'lucide-react'
+import {
+  Bell,
+  ChevronDown,
+  Command,
+  LayoutGrid,
+  Menu,
+  Moon,
+  Search,
+  Star,
+  Sun,
+  User,
+  Boxes,
+  ShoppingCart,
+  Truck,
+  Warehouse,
+  Shield,
+  Home,
+  DollarSign,
+  Users,
+} from 'lucide-react'
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import type { ErpPage } from '@/app/pages'
@@ -16,25 +35,33 @@ const NAV_SECTIONS = [
   'Logistics',
   'Finance',
   'HR',
-  'Customer Service',
-  'Reports',
   'Administration',
-  'Settings',
 ] as const
+
+const SECTION_ICONS = {
+  Dashboard: Home,
+  'Master Data': Boxes,
+  Sales: ShoppingCart,
+  Purchasing: ShoppingCart,
+  Warehouse: Warehouse,
+  Logistics: Truck,
+  Finance: DollarSign,
+  HR: Users,
+  Administration: Shield,
+} as const
 
 function sectionFromModule(module: string) {
   if (module === 'Sales & Distribution') return 'Sales'
   if (module === 'Purchasing / Import') return 'Purchasing'
   if (module === 'Finance & Accounting') return 'Finance'
   if (module === 'Human Resources') return 'HR'
-  if (module === 'Reports & Analytics') return 'Reports'
   if (module === 'User Management') return 'Administration'
   return module
 }
 
-function Sidebar({ pages, open, onClose }: { pages: ErpPage[]; open: boolean; onClose: () => void }) {
+function TopModuleNav({ pages, mobileOpen, onNavigate }: { pages: ErpPage[]; mobileOpen: boolean; onNavigate: () => void }) {
   const location = useLocation()
-  const [expandedSection, setExpandedSection] = useState<string>('Dashboard')
+  const [expandedSection, setExpandedSection] = useState<string>('')
 
   const grouped = useMemo(() => {
     const initial = Object.fromEntries(NAV_SECTIONS.map((section) => [section, [] as ErpPage[]]))
@@ -54,75 +81,63 @@ function Sidebar({ pages, open, onClose }: { pages: ErpPage[]; open: boolean; on
   }, [location.pathname, pages])
 
   useEffect(() => {
-    setExpandedSection(activeSection)
-  }, [activeSection])
+    setExpandedSection('')
+  }, [location.pathname])
 
   return (
-    <aside
-      className={cn(
-        'fixed inset-y-0 left-0 z-40 w-80 transform border-r border-border bg-sidebar px-3 py-4 transition md:static md:w-72 md:translate-x-0',
-        open ? 'translate-x-0' : '-translate-x-full',
-      )}
-    >
-      <div className="mb-4 flex items-center justify-between px-2">
-        <div>
-          <p className="font-display text-xl font-bold text-sidebar-foreground">we-ERP</p>
-          <p className="text-xs text-muted-foreground">Enterprise Command Center</p>
-        </div>
-        <button onClick={onClose} className="rounded-lg p-2 text-muted-foreground hover:bg-muted md:hidden" type="button">
-          <Menu className="h-4 w-4" />
-        </button>
-      </div>
-      <div className="max-h-[calc(100svh-130px)] space-y-4 overflow-y-auto pr-1">
+    <div className={cn('relative border-t border-border/70 pt-2', mobileOpen ? 'block' : 'hidden md:block')}>
+      <div className="scrollbar-hidden flex items-center gap-2 overflow-x-auto overflow-y-visible pb-2">
         {NAV_SECTIONS.map((section) => {
           const sectionPages = grouped[section] ?? []
           const isExpanded = expandedSection === section
+          const SectionIcon = SECTION_ICONS[section]
 
           if (sectionPages.length === 0) return null
 
           return (
-            <div key={section}>
+            <div key={section} className="relative shrink-0">
               <button
                 type="button"
                 className={cn(
-                  'mb-1 flex w-full items-center justify-between rounded-lg px-2 py-2 text-left text-xs font-semibold uppercase tracking-wide transition',
+                  'inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-xs font-semibold uppercase tracking-wide transition-colors duration-200',
                   activeSection === section
-                    ? 'bg-sidebar-accent text-sidebar-accent-foreground'
-                    : 'text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
+                    ? 'border-border bg-muted text-foreground'
+                    : 'border-transparent text-muted-foreground hover:border-border hover:bg-muted',
                 )}
                 onClick={() => setExpandedSection((current) => (current === section ? '' : section))}
               >
+                <SectionIcon className="h-4 w-4" />
                 {section}
-                <ChevronDown className={cn('h-4 w-4 transition-transform', isExpanded ? 'rotate-0' : '-rotate-90')} />
+                <ChevronDown className={cn('h-4 w-4 transition-transform duration-200', isExpanded ? 'rotate-0' : '-rotate-90')} />
               </button>
 
               {isExpanded ? (
-                <div className="space-y-1 pl-2">
-                  {sectionPages.map((page) => {
-                    const active = location.pathname === page.path
-                    return (
-                      <Link
-                        key={page.path}
-                        to={page.path}
-                        className={cn(
-                          'block rounded-lg px-3 py-2 text-sm transition',
-                          active
-                            ? 'bg-sidebar-primary text-sidebar-primary-foreground shadow-sm'
-                            : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground',
-                        )}
-                        onClick={onClose}
-                      >
-                        {page.title}
-                      </Link>
-                    )
-                  })}
+                <div className="absolute left-0 top-full z-50 mt-2 w-72 rounded-xl border border-border bg-popover p-2 shadow-2xl">
+                  <div className="scrollbar-hidden max-h-[50vh] space-y-1 overflow-y-auto pr-1">
+                    {sectionPages.map((page) => {
+                      const active = location.pathname === page.path
+                      return (
+                        <Link
+                          key={page.path}
+                          to={page.path}
+                          className={cn(
+                            'block rounded-lg px-3 py-2 text-sm transition-colors duration-200',
+                            active ? 'bg-primary text-primary-foreground' : 'hover:bg-muted',
+                          )}
+                          onClick={onNavigate}
+                        >
+                          {page.title}
+                        </Link>
+                      )
+                    })}
+                  </div>
                 </div>
               ) : null}
             </div>
           )
         })}
       </div>
-    </aside>
+    </div>
   )
 }
 
@@ -404,9 +419,12 @@ function CommandPalette({ pages }: { pages: ErpPage[] }) {
 }
 
 export function AppShell({ pages }: { pages: ErpPage[] }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [mobileNavOpen, setMobileNavOpen] = useState(false)
   const location = useLocation()
   const navigate = useNavigate()
+
+  const toggleMobileNav = () => setMobileNavOpen((value) => !value)
+  const closeMobileNav = () => setMobileNavOpen(false)
   const { items: favorites, setItems: setFavorites } = useStoredList('we-erp-favorites')
   const { items: recents, setItems: setRecents } = useStoredList('we-erp-recents')
 
@@ -415,24 +433,27 @@ export function AppShell({ pages }: { pages: ErpPage[] }) {
     setRecents((prev) => [path, ...prev.filter((item) => item !== path)].slice(0, 8))
   }, [location.pathname, setRecents])
 
+  useEffect(() => {
+    setMobileNavOpen(false)
+  }, [location.pathname])
+
   const currentPage = useMemo(() => pages.find((page) => page.path === location.pathname), [location.pathname, pages])
   const favoriteSet = useMemo(() => new Set(favorites), [favorites])
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <div className="md:grid md:grid-cols-[18rem_1fr]">
-        <Sidebar pages={pages} open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-        <div className="min-w-0">
-          <header className="sticky top-0 z-20 border-b border-border bg-background/90 px-4 py-3 backdrop-blur md:px-6">
-            <div className="flex flex-wrap items-center gap-3">
+      <div className="min-w-0 pt-40 md:pt-36">
+        <header className="fixed left-0 right-0 top-0 z-30 border-b border-border bg-background/90 px-4 py-3 backdrop-blur md:px-6">
+          <div className="flex flex-wrap items-center gap-3">
               <button
                 type="button"
-                onClick={() => setSidebarOpen(true)}
+                onClick={toggleMobileNav}
                 className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-border md:hidden"
-                aria-label="Open menu"
+                aria-label={mobileNavOpen ? 'Close navigation' : 'Open navigation'}
               >
                 <Menu className="h-4 w-4" />
               </button>
+              <img src="/WE-removebg-preview.png" alt="we-ERP" className="h-8 w-auto dark:brightness-0 dark:invert" />
               <GlobalSearch pages={pages} />
               <SecondaryButton className="gap-2" onClick={() => window.dispatchEvent(new Event('open-command-palette'))}>
                 <LayoutGrid className="h-4 w-4" />
@@ -477,9 +498,13 @@ export function AppShell({ pages }: { pages: ErpPage[] }) {
               <ThemeToggle />
               <NotificationMenu />
               <UserMenu />
-            </div>
+          </div>
+
+          <TopModuleNav pages={pages} mobileOpen={mobileNavOpen} onNavigate={closeMobileNav} />
+
+          <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
+            <Breadcrumbs />
             {currentPage ? (
-              <div className="mt-2 flex items-center justify-end">
                 <button
                   type="button"
                   className={cn(
@@ -498,19 +523,15 @@ export function AppShell({ pages }: { pages: ErpPage[] }) {
                   <Star className="h-3 w-3" />
                   {favoriteSet.has(currentPage.path) ? 'Favorited' : 'Add Favorite'}
                 </button>
-              </div>
-            ) : null}
-            <div className="mt-3">
-              <Breadcrumbs />
-            </div>
-          </header>
-          <main className="px-4 py-5 md:px-6">
-            <Outlet />
-          </main>
-        </div>
+              ) : null}
+          </div>
+        </header>
+        <main className="px-4 py-5 md:px-6">
+          <Outlet />
+        </main>
       </div>
       <CommandPalette pages={pages} />
-      {sidebarOpen && <div className="fixed inset-0 z-30 bg-black/30 md:hidden" onClick={() => setSidebarOpen(false)} />}
+      {mobileNavOpen && <div className="fixed inset-0 z-20 bg-black/20 md:hidden" onClick={closeMobileNav} />}
     </div>
   )
 }
