@@ -11,6 +11,8 @@ import { LeavePage } from '@/features/hr/pages/leave-page'
 import { PayrollPage } from '@/features/hr/pages/payroll-page'
 import { RecruitmentPage } from '@/features/hr/pages/recruitment-page'
 import { HolidayCalendarPage } from '@/features/hr/pages/holiday-calendar-page'
+import { ModuleReportPage } from '@/components/shared/module-report-page'
+import { ModuleSettingsPage } from '@/components/shared/module-settings-page'
 
 function normalizeTitle(title: string) {
   return title.toLowerCase().trim()
@@ -27,6 +29,8 @@ const MATCHED_KEYS = [
   'payroll',
   'recruitment',
   'holiday calendar',
+  'generate hr report',
+  'hr settings',
 ]
 
 export function HrRouter({ page }: { page: PageDefinition }) {
@@ -59,6 +63,8 @@ export function HrRouter({ page }: { page: PageDefinition }) {
       {key === 'payroll' ? <PayrollPage /> : null}
       {key === 'recruitment' ? <RecruitmentPage /> : null}
       {key === 'holiday calendar' ? <HolidayCalendarPage /> : null}
+      {key === 'generate hr report' ? <ModuleReportPage moduleName="Human Resources" /> : null}
+      {key === 'hr settings' ? <ModuleSettingsPage moduleName="Human Resources" /> : null}
 
       {MATCHED_KEYS.includes(key) ? null : <HrDashboardPage />}
     </div>

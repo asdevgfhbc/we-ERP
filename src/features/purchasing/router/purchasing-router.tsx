@@ -13,6 +13,8 @@ import { ShipmentTrackingPage } from '@/features/purchasing/pages/shipment-track
 import { ContainerTrackingPage } from '@/features/purchasing/pages/container-tracking-page'
 import { CustomsDutyPage } from '@/features/purchasing/pages/customs-duty-page'
 import { SupplierPerformancePage } from '@/features/purchasing/pages/supplier-performance-page'
+import { ModuleReportPage } from '@/components/shared/module-report-page'
+import { ModuleSettingsPage } from '@/components/shared/module-settings-page'
 
 function normalizeTitle(title: string) {
   return title.toLowerCase().trim()
@@ -31,6 +33,8 @@ const MATCHED_KEYS = [
   'container tracking',
   'customs & duty',
   'supplier performance',
+  'generate purchasing report',
+  'purchasing settings',
 ]
 
 export function PurchasingRouter({ page }: { page: PageDefinition }) {
@@ -65,6 +69,8 @@ export function PurchasingRouter({ page }: { page: PageDefinition }) {
       {key === 'container tracking' ? <ContainerTrackingPage /> : null}
       {key === 'customs & duty' ? <CustomsDutyPage /> : null}
       {key === 'supplier performance' ? <SupplierPerformancePage /> : null}
+      {key === 'generate purchasing report' ? <ModuleReportPage moduleName="Purchasing" /> : null}
+      {key === 'purchasing settings' ? <ModuleSettingsPage moduleName="Purchasing" /> : null}
 
       {MATCHED_KEYS.includes(key) ? null : <PurchasingDashboardPage />}
     </div>

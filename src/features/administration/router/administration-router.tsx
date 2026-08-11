@@ -12,6 +12,8 @@ import { AuditTrailPage } from '@/features/administration/pages/audit-trail-page
 import { SystemLogsPage } from '@/features/administration/pages/system-logs-page'
 import { LoginHistoryPage } from '@/features/administration/pages/login-history-page'
 import { PermissionGuard } from '@/features/administration/router/permission-guard'
+import { ModuleReportPage } from '@/components/shared/module-report-page'
+import { ModuleSettingsPage } from '@/components/shared/module-settings-page'
 
 function normalizeTitle(title: string) {
   return title.toLowerCase().trim()
@@ -27,6 +29,8 @@ const MATCHED_KEYS = [
   'audit trail',
   'system logs',
   'login history',
+  'generate administration report',
+  'administration settings',
 ]
 
 export function AdministrationRouter({ page }: { page: PageDefinition }) {
@@ -64,6 +68,8 @@ export function AdministrationRouter({ page }: { page: PageDefinition }) {
         {key === 'audit trail' ? <AuditTrailPage /> : null}
         {key === 'system logs' ? <SystemLogsPage /> : null}
         {key === 'login history' ? <LoginHistoryPage /> : null}
+        {key === 'generate administration report' ? <ModuleReportPage moduleName="Administration" /> : null}
+        {key === 'administration settings' ? <ModuleSettingsPage moduleName="Administration" /> : null}
         {MATCHED_KEYS.includes(key) ? null : <UsersPage onView={setSelectedId} />}
       </PermissionGuard>
     </div>

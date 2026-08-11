@@ -13,6 +13,8 @@ import { DeliveryStatusPage } from '@/features/logistics/pages/delivery-status-p
 import { VehicleMaintenancePage } from '@/features/logistics/pages/vehicle-maintenance-page'
 import { FuelRecordsPage } from '@/features/logistics/pages/fuel-records-page'
 import { TripHistoryPage } from '@/features/logistics/pages/trip-history-page'
+import { ModuleReportPage } from '@/components/shared/module-report-page'
+import { ModuleSettingsPage } from '@/components/shared/module-settings-page'
 
 function normalizeTitle(title: string) {
   return title.toLowerCase().trim()
@@ -31,6 +33,8 @@ const MATCHED_KEYS = [
   'vehicle maintenance',
   'fuel records',
   'trip history',
+  'generate logistics report',
+  'logistics settings',
 ]
 
 export function LogisticsRouter({ page }: { page: PageDefinition }) {
@@ -66,6 +70,8 @@ export function LogisticsRouter({ page }: { page: PageDefinition }) {
       {key === 'vehicle maintenance' ? <VehicleMaintenancePage /> : null}
       {key === 'fuel records' ? <FuelRecordsPage /> : null}
       {key === 'trip history' ? <TripHistoryPage /> : null}
+      {key === 'generate logistics report' ? <ModuleReportPage moduleName="Logistics" /> : null}
+      {key === 'logistics settings' ? <ModuleSettingsPage moduleName="Logistics" /> : null}
 
       {MATCHED_KEYS.includes(key) ? null : <LogisticsDashboardPage />}
     </div>

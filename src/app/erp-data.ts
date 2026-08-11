@@ -617,6 +617,7 @@ const pageCatalog: CatalogItem[] = [
   { module: 'Master Data', title: 'Edit Warehouse', kind: 'form', entity: 'warehouse', subtitle: 'Update warehouse ownership and settings.' },
   { module: 'Master Data', title: 'Warehouse Details', kind: 'detail', entity: 'warehouse', subtitle: 'Warehouse profile with inventory value and operations summary.' },
   { module: 'Master Data', title: 'Warehouse History', kind: 'detail', entity: 'warehouse', subtitle: 'Track warehouse master activity and operational updates.' },
+  { module: 'Master Data', title: 'Generate Master Data Report', kind: 'report', entity: 'inventory-report', subtitle: 'Generate master data summary reports by category, status, and ownership.' },
 
   { module: 'Sales & Distribution', title: 'Sales Dashboard', kind: 'dashboard', entity: 'sales-dashboard', subtitle: 'Sales cockpit with revenue, order, and collection insights.' },
   { module: 'Sales & Distribution', title: 'Quotations', kind: 'table', entity: 'quotation', subtitle: 'Sales quotations, status, and commercial value.' },
@@ -633,6 +634,8 @@ const pageCatalog: CatalogItem[] = [
   { module: 'Sales & Distribution', title: 'Customer Payments', kind: 'table', entity: 'payment', subtitle: 'Customer receipts and allocation history.' },
   { module: 'Sales & Distribution', title: 'Sales Returns', kind: 'table', entity: 'return', subtitle: 'Sales return requests and approvals.' },
   { module: 'Sales & Distribution', title: 'VAT Invoice', kind: 'print', entity: 'invoice', subtitle: 'Printable VAT invoice with Excel-style layout.' },
+  { module: 'Sales & Distribution', title: 'Generate Sales Report', kind: 'report', entity: 'sales-report', subtitle: 'Generate sales reports for revenue, orders, and customer performance.' },
+  { module: 'Sales & Distribution', title: 'Sales Settings', kind: 'form', entity: 'sales-order', subtitle: 'Manage department-level sales rules, approvals, and notifications.' },
 
   { module: 'Purchasing / Import', title: 'Purchasing Dashboard', kind: 'dashboard', entity: 'purchase-dashboard', subtitle: 'Purchasing cockpit for PO, inbound, and payable visibility.' },
   { module: 'Purchasing / Import', title: 'Purchase Orders', kind: 'table', entity: 'purchase-order', subtitle: 'Purchase order list with approval and vendor status.' },
@@ -646,6 +649,8 @@ const pageCatalog: CatalogItem[] = [
   { module: 'Purchasing / Import', title: 'Container Tracking', kind: 'table', entity: 'shipment', subtitle: 'Track containers by line, ETA, and transit milestones.' },
   { module: 'Purchasing / Import', title: 'Customs & Duty', kind: 'table', entity: 'customs-duty', subtitle: 'Customs declarations, duty, VAT, and clearance progress.' },
   { module: 'Purchasing / Import', title: 'Supplier Performance', kind: 'table', entity: 'supplier', subtitle: 'Supplier delivery, quality, value, and lead time scorecard.' },
+  { module: 'Purchasing / Import', title: 'Generate Purchasing Report', kind: 'report', entity: 'purchase-report', subtitle: 'Generate purchasing reports by vendor, cost, and lead time.' },
+  { module: 'Purchasing / Import', title: 'Purchasing Settings', kind: 'form', entity: 'purchase-order', subtitle: 'Manage purchasing rules, approval flows, and alert thresholds.' },
 
   { module: 'Warehouse', title: 'Warehouse Dashboard', kind: 'dashboard', entity: 'stock', subtitle: 'Warehouse utilization, stock flow, and receiving status.' },
   { module: 'Warehouse', title: 'Stock Management', kind: 'table', entity: 'stock', subtitle: 'Current stock positions across warehouse locations.' },
@@ -662,6 +667,8 @@ const pageCatalog: CatalogItem[] = [
   { module: 'Warehouse', title: 'Bin Locations', kind: 'table', entity: 'warehouse', subtitle: 'Bin-level storage map with utilization and status.' },
   { module: 'Warehouse', title: 'Rack Management', kind: 'table', entity: 'warehouse', subtitle: 'Rack configuration and capacity management.' },
   { module: 'Warehouse', title: 'Warehouse Details', kind: 'detail', entity: 'warehouse', subtitle: 'Warehouse profile, capacity, manager, and activity timeline.' },
+  { module: 'Warehouse', title: 'Generate Warehouse Report', kind: 'report', entity: 'inventory-report', subtitle: 'Generate warehouse movement, valuation, and utilization reports.' },
+  { module: 'Warehouse', title: 'Warehouse Settings', kind: 'form', entity: 'warehouse', subtitle: 'Manage warehouse operational settings, controls, and thresholds.' },
 
   { module: 'Logistics', title: 'Logistics Dashboard', kind: 'dashboard', entity: 'delivery', subtitle: 'Transport cockpit for fleet, deliveries, and fuel visibility.' },
   { module: 'Logistics', title: 'Vehicles', kind: 'table', entity: 'vehicle', subtitle: 'Vehicle fleet management and maintenance status.' },
@@ -675,6 +682,8 @@ const pageCatalog: CatalogItem[] = [
   { module: 'Logistics', title: 'Vehicle Maintenance', kind: 'table', entity: 'maintenance', subtitle: 'Maintenance planning and service history.' },
   { module: 'Logistics', title: 'Fuel Records', kind: 'table', entity: 'fuel', subtitle: 'Fuel consumption and expense monitoring.' },
   { module: 'Logistics', title: 'Trip History', kind: 'table', entity: 'trip', subtitle: 'Historic trip logs and route outcomes.' },
+  { module: 'Logistics', title: 'Generate Logistics Report', kind: 'report', entity: 'trip', subtitle: 'Generate transport reports for fleet, route, and delivery performance.' },
+  { module: 'Logistics', title: 'Logistics Settings', kind: 'form', entity: 'delivery', subtitle: 'Manage logistics planning constraints, dispatch settings, and alerts.' },
 
   { module: 'Finance & Accounting', title: 'Finance Dashboard', kind: 'dashboard', entity: 'general-ledger', subtitle: 'Executive finance cockpit with cash, revenue, and payable visibility.' },
   { module: 'Finance & Accounting', title: 'Accounts Receivable', kind: 'table', entity: 'receivable', subtitle: 'Outstanding customer receivables and aging.' },
@@ -689,6 +698,8 @@ const pageCatalog: CatalogItem[] = [
   { module: 'Finance & Accounting', title: 'Balance Sheet', kind: 'detail', entity: 'balance-sheet', subtitle: 'Balance sheet snapshot with assets and liabilities.' },
   { module: 'Finance & Accounting', title: 'Profit & Loss', kind: 'detail', entity: 'profit-loss', subtitle: 'Income statement summary by account group.' },
   { module: 'Finance & Accounting', title: 'Tax Summary', kind: 'table', entity: 'vat-settings', subtitle: 'Tax liabilities, VAT summary, and filing status.' },
+  { module: 'Finance & Accounting', title: 'Generate Finance Report', kind: 'report', entity: 'financial-report', subtitle: 'Generate financial statements and period-based accounting reports.' },
+  { module: 'Finance & Accounting', title: 'Finance Settings', kind: 'form', entity: 'general-ledger', subtitle: 'Manage fiscal controls, posting policies, and accounting preferences.' },
 
   { module: 'Human Resources', title: 'HR Dashboard', kind: 'dashboard', entity: 'employee', subtitle: 'Workforce cockpit with attendance, leave, and payroll status.' },
   { module: 'Human Resources', title: 'Employees', kind: 'table', entity: 'employee', subtitle: 'Employee master with department and designation.' },
@@ -700,30 +711,8 @@ const pageCatalog: CatalogItem[] = [
   { module: 'Human Resources', title: 'Payroll', kind: 'table', entity: 'payroll', subtitle: 'Payroll processing and salary summaries.' },
   { module: 'Human Resources', title: 'Holiday Calendar', kind: 'table', entity: 'holiday', subtitle: 'Holiday calendar and public holiday planning.' },
   { module: 'Human Resources', title: 'Recruitment', kind: 'table', entity: 'recruitment', subtitle: 'Open requisitions and hiring progress.' },
-
-  { module: 'Customer Service', title: 'Customer Service Dashboard', kind: 'dashboard', entity: 'complaint', subtitle: 'Support cockpit with SLA, ticket, and return health.' },
-  { module: 'Customer Service', title: 'Complaints', kind: 'table', entity: 'complaint', subtitle: 'Complaint tickets and escalation status.' },
-  { module: 'Customer Service', title: 'Complaint Details', kind: 'detail', entity: 'complaint', subtitle: 'Complaint detail with root cause and resolution timeline.' },
-  { module: 'Customer Service', title: 'Returns', kind: 'table', entity: 'return', subtitle: 'Customer return handling and replacement workflow.' },
-  { module: 'Customer Service', title: 'Warranty Claims', kind: 'table', entity: 'warranty', subtitle: 'Warranty claim processing and approvals.' },
-  { module: 'Customer Service', title: 'Service Requests', kind: 'table', entity: 'service-request', subtitle: 'Support requests and resolution timeline.' },
-  { module: 'Customer Service', title: 'Customer Timeline', kind: 'detail', entity: 'customer-history', subtitle: 'Customer activity, orders, complaints, and service timeline.' },
-
-  { module: 'Reports & Analytics', title: 'Reports Dashboard', kind: 'dashboard', entity: 'performance-dashboard', subtitle: 'Executive report center with KPIs and publication trends.' },
-  { module: 'Reports & Analytics', title: 'Sales Reports', kind: 'report', entity: 'sales-report', subtitle: 'Sales trends, category performance, and customer ranking.' },
-  { module: 'Reports & Analytics', title: 'Purchase Reports', kind: 'report', entity: 'purchase-report', subtitle: 'Purchase trends and supplier analysis.' },
-  { module: 'Reports & Analytics', title: 'Inventory Reports', kind: 'report', entity: 'inventory-report', subtitle: 'Stock movement, value, and coverage analysis.' },
-  { module: 'Reports & Analytics', title: 'Financial Reports', kind: 'report', entity: 'financial-report', subtitle: 'Profit, loss, balance, and cashflow reporting.' },
-  { module: 'Reports & Analytics', title: 'Performance Dashboard', kind: 'dashboard', entity: 'performance-dashboard', subtitle: 'KPI-focused executive dashboard.' },
-  { module: 'Reports & Analytics', title: 'Stock Aging', kind: 'report', entity: 'inventory-report', subtitle: 'Aging buckets for inventory and obsolescence risk.' },
-  { module: 'Reports & Analytics', title: 'Customer Aging', kind: 'report', entity: 'sales-report', subtitle: 'Receivable aging by customer and overdue profile.' },
-  { module: 'Reports & Analytics', title: 'Supplier Aging', kind: 'report', entity: 'purchase-report', subtitle: 'Payable aging by supplier and settlement urgency.' },
-  { module: 'Reports & Analytics', title: 'Revenue Analysis', kind: 'report', entity: 'sales-report', subtitle: 'Revenue composition by region, customer, and channel.' },
-  { module: 'Reports & Analytics', title: 'Expense Analysis', kind: 'report', entity: 'financial-report', subtitle: 'Expense pattern and variance across cost centers.' },
-  { module: 'Reports & Analytics', title: 'Cash Flow', kind: 'report', entity: 'financial-report', subtitle: 'Operating, investing, and financing cashflow movement.' },
-  { module: 'Reports & Analytics', title: 'Inventory Value', kind: 'report', entity: 'inventory-report', subtitle: 'Inventory valuation by category and warehouse.' },
-  { module: 'Reports & Analytics', title: 'Top Selling Products', kind: 'report', entity: 'sales-report', subtitle: 'Top products by revenue, units, and margin contribution.' },
-  { module: 'Reports & Analytics', title: 'Top Customers', kind: 'report', entity: 'sales-report', subtitle: 'Top customers by revenue, frequency, and payment discipline.' },
+  { module: 'Human Resources', title: 'Generate HR Report', kind: 'report', entity: 'employee', subtitle: 'Generate attendance, leave, payroll, and recruitment reports.' },
+  { module: 'Human Resources', title: 'HR Settings', kind: 'form', entity: 'employee', subtitle: 'Manage HR policies, approval settings, and notification defaults.' },
 
   { module: 'User Management', title: 'Users', kind: 'table', entity: 'user', subtitle: 'Application users and access status.' },
   { module: 'User Management', title: 'User Details', kind: 'detail', entity: 'user', subtitle: 'User profile, status, and assigned permissions.' },
@@ -734,18 +723,8 @@ const pageCatalog: CatalogItem[] = [
   { module: 'User Management', title: 'Audit Trail', kind: 'table', entity: 'activity-log', subtitle: 'Immutable trace of critical admin actions.' },
   { module: 'User Management', title: 'System Logs', kind: 'table', entity: 'activity-log', subtitle: 'Service-level operational logs and incidents.' },
   { module: 'User Management', title: 'Login History', kind: 'table', entity: 'activity-log', subtitle: 'Session history and login attempts per user.' },
-
-  { module: 'Settings', title: 'Company Profile', kind: 'form', entity: 'company', subtitle: 'Organization profile, logo, VAT, and contact information.' },
-  { module: 'Settings', title: 'Company Logo', kind: 'form', entity: 'company', subtitle: 'Upload or replace the brand logo asset.' },
-  { module: 'Settings', title: 'Branches', kind: 'table', entity: 'branch', subtitle: 'Branch master with manager mapping.' },
-  { module: 'Settings', title: 'Warehouses', kind: 'table', entity: 'warehouse', subtitle: 'Warehouse configuration and operating status.' },
-  { module: 'Settings', title: 'Invoice Settings', kind: 'form', entity: 'vat-settings', subtitle: 'Invoice numbering, layout, and defaults.' },
-  { module: 'Settings', title: 'VAT / Tax', kind: 'form', entity: 'vat-settings', subtitle: 'Tax calculation, VAT rates, and compliance rules.' },
-  { module: 'Settings', title: 'Currency', kind: 'form', entity: 'currency', subtitle: 'Default currency and symbol setup.' },
-  { module: 'Settings', title: 'Fiscal Year', kind: 'form', entity: 'fiscal-year', subtitle: 'Financial year calendar and period locks.' },
-  { module: 'Settings', title: 'Email Settings', kind: 'form', entity: 'email-settings', subtitle: 'SMTP and outgoing mail defaults.' },
-  { module: 'Settings', title: 'Notification Settings', kind: 'form', entity: 'notification-settings', subtitle: 'System alerts and notification channels.' },
-  { module: 'Settings', title: 'Backup & Restore', kind: 'form', entity: 'backup-restore', subtitle: 'Backup export and restore controls.' },
+  { module: 'User Management', title: 'Generate Administration Report', kind: 'report', entity: 'activity-log', subtitle: 'Generate user-access and security activity reports.' },
+  { module: 'User Management', title: 'Administration Settings', kind: 'form', entity: 'role', subtitle: 'Manage access control policies, login governance, and admin defaults.' },
 ]
 
 function buildColumns(entity: string, title: string) {

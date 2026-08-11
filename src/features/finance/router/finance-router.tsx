@@ -14,6 +14,8 @@ import { TrialBalancePage } from '@/features/finance/pages/trial-balance-page'
 import { BalanceSheetPage } from '@/features/finance/pages/balance-sheet-page'
 import { ProfitLossPage } from '@/features/finance/pages/profit-loss-page'
 import { TaxSummaryPage } from '@/features/finance/pages/tax-summary-page'
+import { ModuleReportPage } from '@/components/shared/module-report-page'
+import { ModuleSettingsPage } from '@/components/shared/module-settings-page'
 
 function normalizeTitle(title: string) {
   return title.toLowerCase().trim()
@@ -33,6 +35,8 @@ const MATCHED_KEYS = [
   'balance sheet',
   'profit & loss',
   'tax summary',
+  'generate finance report',
+  'finance settings',
 ]
 
 export function FinanceRouter({ page }: { page: PageDefinition }) {
@@ -67,6 +71,8 @@ export function FinanceRouter({ page }: { page: PageDefinition }) {
       {key === 'balance sheet' ? <BalanceSheetPage /> : null}
       {key === 'profit & loss' ? <ProfitLossPage /> : null}
       {key === 'tax summary' ? <TaxSummaryPage /> : null}
+      {key === 'generate finance report' ? <ModuleReportPage moduleName="Finance" /> : null}
+      {key === 'finance settings' ? <ModuleSettingsPage moduleName="Finance" /> : null}
 
       {MATCHED_KEYS.includes(key) ? null : <FinanceDashboardPage />}
     </div>

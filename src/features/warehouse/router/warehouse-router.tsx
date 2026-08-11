@@ -16,6 +16,8 @@ import { LowStockAlertsPage } from '@/features/warehouse/pages/low-stock-alerts-
 import { BinLocationsPage } from '@/features/warehouse/pages/bin-locations-page'
 import { RackManagementPage } from '@/features/warehouse/pages/rack-management-page'
 import { WarehouseDetailsPage } from '@/features/warehouse/pages/warehouse-details-page'
+import { ModuleReportPage } from '@/components/shared/module-report-page'
+import { ModuleSettingsPage } from '@/components/shared/module-settings-page'
 
 function normalizeTitle(title: string) {
   return title.toLowerCase().trim()
@@ -37,6 +39,8 @@ const MATCHED_KEYS = [
   'bin locations',
   'rack management',
   'warehouse details',
+  'generate warehouse report',
+  'warehouse settings',
 ]
 
 export function WarehouseRouter({ page }: { page: PageDefinition }) {
@@ -74,6 +78,8 @@ export function WarehouseRouter({ page }: { page: PageDefinition }) {
       {key === 'bin locations' ? <BinLocationsPage /> : null}
       {key === 'rack management' ? <RackManagementPage /> : null}
       {key === 'warehouse details' ? <WarehouseDetailsPage id={selectedId} /> : null}
+      {key === 'generate warehouse report' ? <ModuleReportPage moduleName="Warehouse" /> : null}
+      {key === 'warehouse settings' ? <ModuleSettingsPage moduleName="Warehouse" /> : null}
 
       {MATCHED_KEYS.includes(key) ? null : <WarehouseDashboardPage />}
     </div>

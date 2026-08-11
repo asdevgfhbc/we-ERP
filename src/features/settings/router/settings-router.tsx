@@ -14,6 +14,7 @@ import { FiscalYearPage } from '@/features/settings/pages/fiscal-year-page'
 import { EmailSettingsPage } from '@/features/settings/pages/email-settings-page'
 import { NotificationSettingsPage } from '@/features/settings/pages/notification-settings-page'
 import { BackupRestorePage } from '@/features/settings/pages/backup-restore-page'
+import { ModuleReportPage } from '@/components/shared/module-report-page'
 
 const SETTINGS_KEYS = [
   'company profile',
@@ -27,6 +28,7 @@ const SETTINGS_KEYS = [
   'email settings',
   'notification settings',
   'backup & restore',
+  'generate settings report',
 ]
 
 export function SettingsRouter({ page }: { page: PageDefinition }) {
@@ -65,6 +67,7 @@ export function SettingsRouter({ page }: { page: PageDefinition }) {
         {key === 'email settings' ? <EmailSettingsPage /> : null}
         {key === 'notification settings' ? <NotificationSettingsPage /> : null}
         {key === 'backup & restore' ? <BackupRestorePage /> : null}
+        {key === 'generate settings report' ? <ModuleReportPage moduleName="Settings" /> : null}
         {SETTINGS_KEYS.includes(key) ? null : <CompanyProfilePage />}
       </SettingsPermissionGuard>
     </div>

@@ -14,6 +14,8 @@ import { CreateInvoicePage } from './invoices/create-invoice-page'
 import { InvoicePreviewPage } from './invoices/invoice-preview-page'
 import { CustomerPaymentsPage } from './payments/customer-payments-page'
 import { SalesReturnsPage } from './returns/sales-returns-page'
+import { ModuleReportPage } from '@/components/shared/module-report-page'
+import { ModuleSettingsPage } from '@/components/shared/module-settings-page'
 
 function normalizeTitle(title: string) {
   return title.toLowerCase().trim()
@@ -54,6 +56,8 @@ export function SalesRouter({ page }: { page: PageDefinition }) {
       {key === 'customer payments' ? <CustomerPaymentsPage /> : null}
       {key === 'sales returns' ? <SalesReturnsPage /> : null}
       {key === 'vat invoice' ? <InvoicePreviewPage id={selectedId} /> : null}
+      {key === 'generate sales report' ? <ModuleReportPage moduleName="Sales" /> : null}
+      {key === 'sales settings' ? <ModuleSettingsPage moduleName="Sales" /> : null}
 
       {[
         'sales dashboard',
@@ -71,6 +75,8 @@ export function SalesRouter({ page }: { page: PageDefinition }) {
         'customer payments',
         'sales returns',
         'vat invoice',
+        'generate sales report',
+        'sales settings',
       ].includes(key)
         ? null
         : <SalesDashboardPage />}
