@@ -19,7 +19,7 @@ import {
   Users,
 } from 'lucide-react'
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
-import { useEffect, useMemo, useState, type ReactNode } from 'react'
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import type { ErpPage } from '@/app/pages'
 import { notifications, pageTitleByPath } from '@/app/pages'
 import { cn } from '@/lib/utils'
@@ -62,6 +62,7 @@ function sectionFromModule(module: string) {
 function TopModuleNav({ pages, mobileOpen, onNavigate }: { pages: ErpPage[]; mobileOpen: boolean; onNavigate: () => void }) {
   const location = useLocation()
   const [expandedSection, setExpandedSection] = useState<string>('')
+  const navRef = useRef<HTMLDivElement | null>(null)
 
   const grouped = useMemo(() => {
     const initial = Object.fromEntries(NAV_SECTIONS.map((section) => [section, [] as ErpPage[]]))
@@ -84,32 +85,86 @@ function TopModuleNav({ pages, mobileOpen, onNavigate }: { pages: ErpPage[]; mob
     setExpandedSection('')
   }, [location.pathname])
 
+  useEffect(() => {
+    const handlePointerDown = (event: PointerEvent) => {
+      if (!navRef.current) return
+      if (navRef.current.contains(event.target as Node)) return
+      setExpandedSection('')
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setExpandedSection('')
+      }
+    }
+
+    window.addEventListener('pointerdown', handlePointerDown)
+    window.addEventListener('keydown', handleKeyDown)
+    return () => {
+      window.removeEventListener('pointerdown', handlePointerDown)
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [])
+
   return (
-    <div className={cn('relative border-t border-border/70 pt-2', mobileOpen ? 'block' : 'hidden md:block')}>
+    <div ref={navRef} className={cn('relative border-t border-border/70 pt-2', mobileOpen ? 'block' : 'hidden md:block')}>
       <div className="scrollbar-hidden flex items-center gap-2 overflow-x-auto overflow-y-visible pb-2">
         {NAV_SECTIONS.map((section) => {
           const sectionPages = grouped[section] ?? []
           const isExpanded = expandedSection === section
           const SectionIcon = SECTION_ICONS[section]
+          const sectionLandingPath =
+            sectionPages.find((page) => /dashboard|home/i.test(page.title))?.path ?? sectionPages[0]?.path
 
           if (sectionPages.length === 0) return null
 
           return (
-            <div key={section} className="relative shrink-0">
-              <button
-                type="button"
+            <div
+              key={section}
+              className="relative shrink-0"
+              onMouseEnter={() => {
+                if (!mobileOpen) setExpandedSection(section)
+              }}
+              onMouseLeave={() => {
+                if (!mobileOpen) setExpandedSection((current) => (current === section ? '' : current))
+              }}
+            >
+              <div
                 className={cn(
-                  'inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-xs font-semibold uppercase tracking-wide transition-colors duration-200',
+                  'inline-flex overflow-hidden rounded-lg border text-xs font-semibold uppercase tracking-wide transition-colors duration-200',
                   activeSection === section
                     ? 'border-border bg-muted text-foreground'
                     : 'border-transparent text-muted-foreground hover:border-border hover:bg-muted',
                 )}
-                onClick={() => setExpandedSection((current) => (current === section ? '' : section))}
               >
-                <SectionIcon className="h-4 w-4" />
-                {section}
-                <ChevronDown className={cn('h-4 w-4 transition-transform duration-200', isExpanded ? 'rotate-0' : '-rotate-90')} />
-              </button>
+                {sectionLandingPath ? (
+                  <Link
+                    to={sectionLandingPath}
+                    className="inline-flex items-center gap-2 px-3 py-2"
+                    onClick={onNavigate}
+                  >
+                    <SectionIcon className="h-4 w-4" />
+                    {section}
+                  </Link>
+                ) : (
+                  <button type="button" className="inline-flex items-center gap-2 px-3 py-2">
+                    <SectionIcon className="h-4 w-4" />
+                    {section}
+                  </button>
+                )}
+
+                {sectionPages.length > 1 ? (
+                  <button
+                    type="button"
+                    className="inline-flex items-center border-l border-border/70 px-2"
+                    onClick={() => setExpandedSection((current) => (current === section ? '' : section))}
+                    aria-label={`Toggle ${section} menu`}
+                    aria-expanded={isExpanded}
+                  >
+                    <ChevronDown className={cn('h-4 w-4 transition-transform duration-200', isExpanded ? 'rotate-0' : '-rotate-90')} />
+                  </button>
+                ) : null}
+              </div>
 
               {isExpanded ? (
                 <div className="absolute left-0 top-full z-50 mt-2 w-72 rounded-xl border border-border bg-popover p-2 shadow-2xl">
