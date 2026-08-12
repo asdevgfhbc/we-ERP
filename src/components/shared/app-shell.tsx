@@ -1,9 +1,8 @@
-﻿import {
+import {
   Bell,
   ChevronDown,
   Command,  Menu,
   Moon,
-  Search,
   Sun,
   User,
   Boxes,
@@ -99,11 +98,11 @@ function TopModuleNav({
   return (
     <nav
       className={cn(
-        'relative border-t border-border/70 pt-2',
+        'relative w-full shrink-0',
         mobileOpen ? 'block' : 'block',
       )}
     >
-      <div className="flex items-center justify-center gap-1 overflow-visible whitespace-nowrap pb-2">
+      <div className="flex w-full flex-nowrap items-center justify-center gap-0.5 overflow-visible whitespace-nowrap">
         {NAV_SECTIONS.map((section) => {
           const sectionPages = grouped[section] ?? []
 
@@ -121,13 +120,26 @@ function TopModuleNav({
             >
               <button
                 type="button"
-                onClick={() =>
-                  setExpandedSection((current) =>
-                    current === section ? null : section,
+                onClick={() => {
+                  const firstPage = sectionPages[0]
+
+                  if (section === 'Dashboard') {
+                    setExpandedSection(null)
+                    onNavigate()
+                    navigate('/dashboard/home')
+                    return
+                  }
+
+                  setExpandedSection(
+                    isOpen ? null : section,
                   )
-                }
+
+                  if (firstPage) {
+                    navigate(firstPage.path)
+                  }
+                }}
                 className={cn(
-                  'inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-all',
+                  'inline-flex shrink-0 items-center justify-center gap-1 rounded-full px-3 py-2 text-xs font-medium transition-all',
                   'text-muted-foreground hover:bg-muted hover:text-foreground',
                 )}
               >
@@ -135,23 +147,25 @@ function TopModuleNav({
 
                 <span>{section}</span>
 
-                <ChevronDown
-                  className={cn(
-                    'h-4 w-4 transition-transform',
-                    isOpen && 'rotate-180',
-                  )}
-                />
+                {section !== 'Dashboard' && (
+                  <ChevronDown
+                    className={cn(
+                      'h-3 w-3 transition-transform',
+                      isOpen && 'rotate-180',
+                    )}
+                  />
+                )}
               </button>
 
-              {isOpen && (
-                <div className="absolute left-0 top-full z-[100] mt-2 w-[340px] rounded-2xl border border-border bg-background p-3 shadow-2xl">
-                  <div className="mb-2 px-2 py-2">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              {isOpen && section !== 'Dashboard' && (
+                <div className="absolute left-1/2 top-full z-[100] mt-3 w-[min(1100px,calc(100vw-2rem))] -translate-x-1/2 rounded-2xl border border-border bg-background p-5 shadow-2xl">
+                  <div className="mb-5">
+                    <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
                       {section}
                     </p>
                   </div>
 
-                  <div className="max-h-[55vh] overflow-y-auto">
+                  <div className="grid grid-cols-4 gap-x-5 gap-y-0">
                     {sectionPages.map((page) => {
                       const active =
                         location.pathname === page.path
@@ -162,27 +176,21 @@ function TopModuleNav({
                           type="button"
                           onClick={() => openPage(page.path)}
                           className={cn(
-                            'block w-full rounded-xl px-3 py-3 text-left transition-colors',
+                            'group min-w-0 rounded-lg px-3 py-2.5 text-left transition-colors',
                             active
                               ? 'bg-muted'
                               : 'hover:bg-muted',
                           )}
                         >
-                          <div className="flex items-center justify-between gap-3">
-                            <div>
-                              <p className="text-sm font-medium text-foreground">
-                                {page.title}
-                              </p>
+                          <p className="whitespace-nowrap text-sm font-medium text-foreground">
+                            {page.title}
+                          </p>
 
-                              <p className="mt-0.5 text-xs text-muted-foreground">
-                                {page.subtitle}
-                              </p>
-                            </div>
-
-                            <span className="text-muted-foreground">
-                              ?
-                            </span>
-                          </div>
+                          {page.subtitle && (
+                            <p className="mt-0.5 truncate text-xs text-muted-foreground">
+                              {page.subtitle}
+                            </p>
+                          )}
                         </button>
                       )
                     })}
@@ -208,17 +216,11 @@ function UserMenu() {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="inline-flex h-10 items-center gap-2 rounded-full border border-border px-3 text-sm font-medium hover:bg-muted"
+        className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border hover:bg-muted"
       >
         <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-foreground text-background">
           <User className="h-4 w-4" />
         </span>
-
-        <span className="hidden lg:inline">
-          ERP Admin
-        </span>
-
-        <ChevronDown className="h-4 w-4" />
       </button>
 
       {open && (
@@ -313,91 +315,6 @@ function ThemeToggle() {
         <Moon className="h-4 w-4" />
       )}
     </button>
-  )
-}
-
-/* =========================
-   GLOBAL SEARCH
-========================= */
-
-function GlobalSearch({ pages }: { pages: ErpPage[] }) {  const [open, setOpen] = useState(false)
-  const navigate = useNavigate()
-  const [query, setQuery] = useState('')
-
-  const results = useMemo(() => {
-    const lower = query.toLowerCase().trim()
-
-    if (!lower) return []
-
-    return pages
-      .filter(
-        (page) =>
-          page.title.toLowerCase().includes(lower) ||
-          page.module.toLowerCase().includes(lower),
-      )
-      .slice(0, 8)
-  }, [pages, query])
-
-  const goTo = (path: string) => {
-    navigate(path)
-    setOpen(false)
-    setQuery('')
-  }
-
-  return (
-    <div className="relative hidden flex-1 md:flex">
-      <div className="flex w-full items-center gap-2 rounded-full bg-muted/70 px-4">
-        <Search className="h-4 w-4 text-muted-foreground" />
-
-        <Input
-          aria-label="Global Search"
-          className="h-10 border-none bg-transparent p-0 shadow-none focus:ring-0"
-          placeholder="Search anything..."
-          value={query}
-          onFocus={() => setOpen(true)}
-          onBlur={() =>
-            setTimeout(() => setOpen(false), 140)
-          }
-          onChange={(event) => {
-            setQuery(event.target.value)
-            setOpen(true)
-          }}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter' && results[0]) {
-              event.preventDefault()
-              goTo(results[0].path)
-            }
-          }}
-        />
-      </div>
-
-      {open && query.trim() && (
-        <div className="absolute left-0 right-0 top-12 z-[80] rounded-2xl border border-border bg-background p-2 shadow-2xl">
-          {results.length === 0 ? (
-            <p className="px-3 py-3 text-sm text-muted-foreground">
-              No matching pages.
-            </p>
-          ) : null}
-
-          {results.map((page) => (
-            <button
-              key={page.path}
-              type="button"
-              className="block w-full rounded-xl px-3 py-3 text-left hover:bg-muted"
-              onMouseDown={() => goTo(page.path)}
-            >
-              <p className="text-sm font-medium">
-                {page.title}
-              </p>
-
-              <p className="text-xs text-muted-foreground">
-                {page.module}
-              </p>
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
   )
 }
 
@@ -577,66 +494,60 @@ export function AppShell({ pages }: { pages: ErpPage[] }) {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <div className="min-w-0 pt-36 md:pt-36">
+      <div className="min-w-0 pt-20">
         <header className="fixed left-0 right-0 top-0 z-50 border-b border-border/60 bg-background/80 px-4 py-3 backdrop-blur-xl md:px-8">
+  {/* MAIN NAVBAR */}
+  <div className="flex w-full min-w-0 items-center gap-4">
 
-          {/* MAIN NAVBAR */}
-          <div className="relative flex w-full items-center justify-between gap-3">
+    {/* MOBILE MENU */}
+    <button
+      type="button"
+      onClick={() => setMobileNavOpen((value) => !value)}
+      className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border md:hidden"
+      aria-label={mobileNavOpen ? 'Close navigation' : 'Open navigation'}
+    >
+      <Menu className="h-4 w-4" />
+    </button>
 
-            {/* MOBILE MENU */}
-            <button
-              type="button"
-              onClick={() =>
-                setMobileNavOpen((value) => !value)
-              }
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border md:hidden"
-              aria-label={
-                mobileNavOpen
-                  ? 'Close navigation'
-                  : 'Open navigation'
-              }
-            >
-              <Menu className="h-4 w-4" />
-            </button>
+    {/* LOGO */}
+    <Link
+      to="/dashboard/home"
+      className="flex shrink-0 items-center"
+    >
+      <img
+        src="/WE-removebg-preview.png"
+        alt="we-ERP"
+        className="h-9 w-auto dark:brightness-0 dark:invert"
+      />
+    </Link>
 
-            {/* LOGO */}
-            <Link
-              to="/dashboard/home"
-              className="flex shrink-0 items-center"
-            >
-              <img
-                src="/WE-removebg-preview.png"
-                alt="we-ERP"
-                className="h-9 w-auto dark:brightness-0 dark:invert"
-              />
-            </Link>
 
-            {/* SEARCH */}
-            <div className="ml-auto flex min-w-0 flex-1 justify-end lg:max-w-md">
-              <GlobalSearch pages={pages} />
-            </div>
+    {/* MODULE NAV */}
+    <div className="min-w-0 flex-1 overflow-visible">
+      <TopModuleNav
+        pages={pages}
+        mobileOpen={mobileNavOpen}
+        onNavigate={() => setMobileNavOpen(false)}
+      />
+    </div>
 
-            {/* THEME */}
-            <ThemeToggle />
+    {/* THEME */}
+    <div className="shrink-0">
+      <ThemeToggle />
+    </div>
 
-            {/* NOTIFICATIONS */}
-            <NotificationMenu />
+    {/* NOTIFICATIONS */}
+    <div className="shrink-0">
+      <NotificationMenu />
+    </div>
 
-            {/* USER */}
-            <UserMenu />
-          </div>
+    {/* USER */}
+    <div className="shrink-0">
+      <UserMenu />
+    </div>
 
-          {/* MOBILE MODULE NAV */}
-          <div className="w-full">
-            <TopModuleNav
-              pages={pages}
-              mobileOpen={mobileNavOpen}
-              onNavigate={() =>
-                setMobileNavOpen(false)
-              }
-            />
-          </div>
-        </header>
+  </div>
+</header>
 
         {/* PAGE CONTENT */}
         <main className="w-full px-4 py-5 md:px-8">
@@ -655,6 +566,35 @@ export function AppShell({ pages }: { pages: ErpPage[] }) {
     </div>
   )
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
