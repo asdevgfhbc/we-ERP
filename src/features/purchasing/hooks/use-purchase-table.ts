@@ -1,7 +1,12 @@
 import { useMemo, useState } from 'react'
 import { textValue, type PurchaseRow } from '@/features/purchasing/utils/purchasing-utils'
 
-export type PurchaseColumn = { key: string; label: string; align?: 'left' | 'center' | 'right' }
+export type PurchaseColumn = {
+  key: string
+  label: string
+  align?: 'left' | 'center' | 'right'
+  format?: 'auto' | 'text' | 'number' | 'currency'
+}
 
 export function usePurchaseTable(rows: PurchaseRow[], columns: PurchaseColumn[]) {
   const [query, setQuery] = useState('')

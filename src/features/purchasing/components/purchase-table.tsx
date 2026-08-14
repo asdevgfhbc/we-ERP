@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Badge, Button, Card, CardContent, CardHeader, CardTitle, Input, SecondaryButton, Select, Table, TableWrap, TBody, Td, Th, THead, Tr } from '@/components/ui/primitives'
 import { StatusBadge } from '@/components/shared/page-primitives'
 import { Download, Eye, FileText, Filter, Printer, Trash2 } from 'lucide-react'
@@ -22,6 +22,10 @@ export function PurchaseTable({
 }) {
   const [sourceRows, setSourceRows] = useState(rows)
   const table = usePurchaseTable(sourceRows, columns)
+
+  useEffect(() => {
+    setSourceRows(rows)
+  }, [rows])
 
   const {
     query,
@@ -82,6 +86,28 @@ export function PurchaseTable({
       ...makeExportRows.map((line) => line.join(' | ')),
     ].join('\n')
     exportFile(`${slugifyName(title)}.txt`, content, 'text/plain;charset=utf-8;')
+  }
+
+  const renderCellValue = (value: unknown, column: PurchaseColumn) => {
+    if (column.key === 'status' || column.key === 'approvalStatus' || column.key === 'inspectionStatus') {
+      return <StatusBadge value={textValue(value)} />
+    }
+
+    if (column.format === 'currency') {
+      return formatCurrency(Number(value || 0))
+    }
+
+    if (column.format === 'number') {
+      return textValue(value)
+    }
+
+    if (column.format === 'text') {
+      return textValue(value)
+    }
+
+    return column.key.includes('amount') || column.key.includes('value') || column.key.includes('balance') || column.key.includes('total')
+      ? formatCurrency(Number(value || 0))
+      : textValue(value)
   }
 
   return (
@@ -149,7 +175,7 @@ export function PurchaseTable({
                   {activeColumns.slice(0, 4).map((column) => (
                     <div key={`mobile-${String(row.id)}-${column.key}`} className="flex items-center justify-between text-sm">
                       <span className="text-muted-foreground">{column.label}</span>
-                      <span>{column.key.includes('amount') || column.key.includes('value') || column.key.includes('balance') || column.key.includes('total') ? formatCurrency(Number(row[column.key] || 0)) : textValue(row[column.key])}</span>
+                      <span>{renderCellValue(row[column.key], column)}</span>
                     </div>
                   ))}
                   {onView ? <SecondaryButton className="h-8 px-3" onClick={() => onView(String(row.id ?? row.reference ?? row.number))}><Eye className="h-4 w-4" /></SecondaryButton> : null}
@@ -178,11 +204,7 @@ export function PurchaseTable({
                     <Td><input type="checkbox" checked={selectedIds.includes(String(row.id ?? row.reference ?? row.number))} onChange={() => setSelectedIds((prev) => prev.includes(String(row.id ?? row.reference ?? row.number)) ? prev.filter((id) => id !== String(row.id ?? row.reference ?? row.number)) : [...prev, String(row.id ?? row.reference ?? row.number)])} /></Td>
                     {activeColumns.map((column) => (
                       <Td key={column.key} className={cn(column.align === 'right' && 'text-right')}>
-                        {column.key === 'status' || column.key === 'approvalStatus' || column.key === 'inspectionStatus'
-                          ? <StatusBadge value={textValue(row[column.key])} />
-                          : column.key.includes('amount') || column.key.includes('value') || column.key.includes('balance') || column.key.includes('total')
-                            ? formatCurrency(Number(row[column.key] || 0))
-                            : textValue(row[column.key])}
+                        {renderCellValue(row[column.key], column)}
                       </Td>
                     ))}
                     <Td className="text-right">

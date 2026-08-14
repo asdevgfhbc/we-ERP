@@ -669,6 +669,7 @@ const pageCatalog: CatalogItem[] = [
   { module: 'Warehouse', title: 'Warehouse Details', kind: 'detail', entity: 'warehouse', subtitle: 'Warehouse profile, capacity, manager, and activity timeline.' },
   { module: 'Warehouse', title: 'Generate Warehouse Report', kind: 'report', entity: 'inventory-report', subtitle: 'Generate warehouse movement, valuation, and utilization reports.' },
   { module: 'Warehouse', title: 'Warehouse Settings', kind: 'form', entity: 'warehouse', subtitle: 'Manage warehouse operational settings, controls, and thresholds.' },
+  { module: 'Warehouse', title: 'Cargo Ship', kind: 'table', entity: 'cargo-ship', subtitle: 'Manage cargo ships, voyages, ports, containers, cargo weight, ETA, ETD, and shipment status.' },
 
   { module: 'Logistics', title: 'Logistics Dashboard', kind: 'dashboard', entity: 'delivery', subtitle: 'Transport cockpit for fleet, deliveries, and fuel visibility.' },
   { module: 'Logistics', title: 'Vehicles', kind: 'table', entity: 'vehicle', subtitle: 'Vehicle fleet management and maintenance status.' },
@@ -797,6 +798,10 @@ function numberValue(seed: number, step = 120) {
 
 export function generatePageRows(page: PageDefinition, count = 12): Array<Record<string, unknown>> {
   const entity = page.entity
+
+  if (entity === 'cargo-ship') {
+    return []
+  }
   return Array.from({ length: count }).map((_, index) => {
     const day = format(new Date(2026, 7, 6 - index), 'yyyy-MM-dd')
     const status = rowStatus(index)
@@ -1402,3 +1407,4 @@ export const companyProfile = {
   phone: '+1 555 010 7788',
   email: 'accounts@we-erp.local',
 }
+

@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react'
 import type { PageDefinition } from '@/app/pages'
-import { SecondaryButton } from '@/components/ui/primitives'
 import { WarehouseDashboardPage } from '@/features/warehouse/pages/warehouse-dashboard-page'
 import { StockManagementPage } from '@/features/warehouse/pages/stock-management-page'
 import { StockLedgerPage } from '@/features/warehouse/pages/stock-ledger-page'
@@ -16,6 +15,7 @@ import { LowStockAlertsPage } from '@/features/warehouse/pages/low-stock-alerts-
 import { BinLocationsPage } from '@/features/warehouse/pages/bin-locations-page'
 import { RackManagementPage } from '@/features/warehouse/pages/rack-management-page'
 import { WarehouseDetailsPage } from '@/features/warehouse/pages/warehouse-details-page'
+import { CargoShipPage } from '@/features/warehouse/pages/cargo-ship-page'
 import { ModuleReportPage } from '@/components/shared/module-report-page'
 import { ModuleSettingsPage } from '@/components/shared/module-settings-page'
 
@@ -41,6 +41,7 @@ const MATCHED_KEYS = [
   'warehouse details',
   'generate warehouse report',
   'warehouse settings',
+  'cargo ship',
 ]
 
 export function WarehouseRouter({ page }: { page: PageDefinition }) {
@@ -49,19 +50,6 @@ export function WarehouseRouter({ page }: { page: PageDefinition }) {
 
   return (
     <div className="space-y-5">
-      <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-        <div>
-          <h1 className="font-display text-2xl font-bold tracking-tight">{page.title}</h1>
-          <p className="text-sm text-muted-foreground">{page.subtitle}</p>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <SecondaryButton>Export</SecondaryButton>
-          <SecondaryButton>Print</SecondaryButton>
-          <button className="inline-flex h-10 items-center justify-center rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground" type="button">
-            Add New
-          </button>
-        </div>
-      </div>
 
       {key === 'warehouse dashboard' ? <WarehouseDashboardPage /> : null}
       {key === 'stock management' ? <StockManagementPage /> : null}
@@ -81,7 +69,11 @@ export function WarehouseRouter({ page }: { page: PageDefinition }) {
       {key === 'generate warehouse report' ? <ModuleReportPage moduleName="Warehouse" /> : null}
       {key === 'warehouse settings' ? <ModuleSettingsPage moduleName="Warehouse" /> : null}
 
+      {key === 'cargo ship' ? <CargoShipPage /> : null}
+
       {MATCHED_KEYS.includes(key) ? null : <WarehouseDashboardPage />}
     </div>
   )
 }
+
+
